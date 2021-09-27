@@ -12,14 +12,14 @@ import (
 
 func main() {
 	config, err := parseCfg("./config/config.yaml")
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 
-	log.Fatal(http.ListenAndServe(":" + strconv.Itoa(config.Port), nil))
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(config.App.Port), nil))
 }
 
-func parseCfg(path string) (*config.Config, error){
+func parseCfg(path string) (*config.Config, error) {
 	filename, _ := filepath.Abs(path)
 	yamlFile, err := ioutil.ReadFile(filename)
 
