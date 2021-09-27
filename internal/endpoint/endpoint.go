@@ -27,7 +27,7 @@ func NewEndpoint(db *sqlx.DB, config *config.Config) *Endpoint {
 }
 
 func (e *Endpoint) authCredentials(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
+	if r.Method != http.MethodPost {
 		responseWriter(http.StatusMethodNotAllowed, map[string]interface{}{
 			"error": "method not allowed",
 		}, w)
@@ -103,7 +103,7 @@ func (e *Endpoint) authCredentials(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *Endpoint) authAccessToken(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
+	if r.Method != http.MethodPost {
 		responseWriter(http.StatusMethodNotAllowed, map[string]interface{}{
 			"error": "method not allowed",
 		}, w)
@@ -150,7 +150,7 @@ func (e *Endpoint) authAccessToken(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *Endpoint) refreshTokens(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
+	if r.Method != http.MethodPost {
 		responseWriter(http.StatusMethodNotAllowed, map[string]interface{}{
 			"error": "method not allowed",
 		}, w)
@@ -215,7 +215,7 @@ func (e *Endpoint) refreshTokens(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *Endpoint) authGuest(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
+	if r.Method != http.MethodPost {
 		responseWriter(http.StatusMethodNotAllowed, map[string]interface{}{
 			"error": "method not allowed",
 		}, w)
@@ -266,7 +266,7 @@ func (e *Endpoint) authGuest(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *Endpoint) getLoginFromAccessToken(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
+	if r.Method != http.MethodPost {
 		responseWriter(http.StatusMethodNotAllowed, map[string]interface{}{
 			"error": "method not allowed",
 		}, w)
@@ -315,7 +315,7 @@ func (e *Endpoint) getLoginFromAccessToken(w http.ResponseWriter, r *http.Reques
 }
 
 func (e *Endpoint) createUser(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
+	if r.Method != http.MethodPost {
 		responseWriter(http.StatusMethodNotAllowed, map[string]interface{}{
 			"error": "method not allowed",
 		}, w)
