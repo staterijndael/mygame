@@ -16,7 +16,7 @@ func main() {
 		panic(err)
 	}
 
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(config.App.Port), nil))
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(config.Port), nil))
 }
 
 func parseCfg(path string) (*config.Config, error) {
