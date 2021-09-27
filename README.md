@@ -10,15 +10,20 @@
 
 Create **local-config.yaml** file in config directory:
 ```yaml
-appconfig:
-  ip: "0.0.0.0"
-  grpc_port: "7001"
-  http_port: "8080"
-redis:
-  db: 0
-  host: "0.0.0.0"
-  port: "6379"
-  password: ""
+app:
+  port: 8080
+
+db:
+  host:     "0.0.0.0"
+  port:     "5432"
+  user:     "user"
+  password: "password"
+  db_name:  "mygame"
+  ssl_mode: "disable"
+
+jwt:
+  secret_key:      "1234"
+  expiration_time: "24h"
 ```
 
 ### Build
@@ -27,11 +32,11 @@ go build -o fibonacci-service cmd/main.go
 ```
 ### Run
 ```shell
-./fibonacci-service -config-path ./config/config.yaml
+./fibonacci-service
 ```
 
 ### OR
 
 ```shell
-go run cmd/main.go -config-path ./config/config.yaml
+go run cmd/main.go
 ```
