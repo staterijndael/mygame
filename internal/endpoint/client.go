@@ -1,8 +1,11 @@
 package endpoint
 
 import (
-	"bytes"
+	"context"
+	"encoding/json"
 	"log"
+	"mygame/internal/models"
+	"mygame/tools/jwt"
 	"net/http"
 	"time"
 
@@ -33,9 +36,22 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
+type Role int
+
+const (
+	User Role = iota
+	Leader
+)
+
 // Client is a middleman between the websocket connection and the hub.
 type Client struct {
 	hub *Hub
+
+	id uint64
+
+	token string
+
+	role Role
 
 	// The websocket connection.
 	conn *websocket.Conn
@@ -58,10 +74,20 @@ func (c *Client) readPump() {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
 			}
+
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.hub.broadcast <- message
+
+		var event ClientEvent
+
+		err = json.Unmarshal(message, &event)
+		if err != nil {
+			c.conn.WriteMessage(1, []byte("incorrect data"))
+
+			continue
+		}
+
+		c.hub.game.eventChannel <- &event
 	}
 }
 
@@ -106,13 +132,120 @@ func (c *Client) writePump() {
 }
 
 // serveWs handles websocket requests from the peer.
-func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	ctx = context.WithValue(ctx, "JWT_KEY", e.configuration.JWT.SecretKey)
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+
+	accessToken := r.Header.Get("Authorization")
+	if accessToken == "" {
+		conn.WriteMessage(1, []byte("access token is empty"))
+		conn.Close()
+
+		return
+	}
+
+	token, err := jwt.ParseJWT([]byte(e.configuration.JWT.SecretKey), accessToken)
+	if err != nil {
+		conn.WriteMessage(1, []byte("token parse error "+err.Error()))
+		conn.Close()
+
+		return
+	}
+
+	if token.ExpiresAt < time.Now().Unix() {
+		conn.WriteMessage(1, []byte("token expired"))
+		conn.Close()
+
+		return
+	}
+
+	var createGame models.CreateGame
+	var joinGame models.JoinGame
+
+	_, msg, err := conn.ReadMessage()
+
+	errCreateGame, errJoinGame := json.Unmarshal(msg, &createGame), json.Unmarshal(msg, &joinGame)
+	if errCreateGame != nil && errJoinGame != nil {
+		conn.WriteMessage(1, []byte("invalid event"))
+		conn.Close()
+
+		return
+	}
+
+	var hub *Hub
+	var role Role
+	if errCreateGame != nil {
+		game := &Game{
+			Name:   "someRandomName",
+			Author: "someRandomAuthor",
+			Date:   "25.02.2021",
+			Rounds: []*Round{
+				{
+					Id:   1,
+					Name: "firstRound",
+					Themes: []*Theme{
+						{
+							Id:   1,
+							Name: "firstTheme",
+							Quests: []*Question{
+								{
+									Id:    1,
+									Price: 500,
+									Objects: []*Object{
+										{
+											Id:   1,
+											Type: Text,
+											Src:  "someText",
+										},
+										{
+											Id:   2,
+											Type: Image,
+											Src:  "./image.png",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		}
+
+		hub = registerHub(ctx, game)
+
+		hub.opts.Name = createGame.Name
+		hub.opts.Password = createGame.Password
+		hub.opts.MaxPlayers = createGame.MaxPlayers
+		// todo: parsing pack
+		role = Leader
+	} else {
+		foundHub, ok := hubs[joinGame.HubID]
+		if !ok {
+			conn.WriteMessage(1, []byte("incorrect hub id"))
+			conn.Close()
+
+			return
+		}
+
+		hub = foundHub
+		role = User
+	}
+
+	if hub.opts.MaxPlayers == len(hub.clients)-1 {
+		conn.WriteMessage(1, []byte("players limit reached"))
+		conn.Close()
+
+		return
+	}
+
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), token: accessToken, role: role, id: token.ID}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in
