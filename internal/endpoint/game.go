@@ -82,7 +82,7 @@ type ServerEvent struct {
 }
 
 type JoinServerEvent struct {
-	UserID   uint64
+	QueueID  int
 	Nickname string
 	ImageUID string
 }
@@ -115,20 +115,20 @@ type ChooseQuestServerEvent struct {
 }
 
 type TakenQuestServerEvent struct {
-	UserID uint64
+	QueueID int
 }
 
 type GetQuestServerEvent struct {
-	UserID uint64
+	QueueID int
 }
 
 type ScoreChangedServerEvent struct {
-	UserID uint64
-	Score  int
+	QueueID int
+	Score   int
 }
 
 type FinalServerEvent struct {
-	WinnerID uint64
+	WinnerID int
 }
 
 type Game struct {
@@ -137,15 +137,15 @@ type Game struct {
 	Date   string
 	Rounds []*Round
 
-	hub                    *Hub
-	players                map[*Client]*Player
-	playersQueueIDByUserID map[uint64]int
-	playersUserIDByQueueID map[int]uint64
+	hub                   *Hub
+	players               map[*Client]*Player
+	playersQueueIDByToken map[string]int
+	playersTokenByQueueID map[int]string
 
 	eventChannel chan *ClientEvent
 
 	currentStep     Step
-	currentPlayerID uint64
+	currentPlayerID int
 
 	currentRound    int
 	currentTheme    int
@@ -241,13 +241,13 @@ func (game *Game) runGame(ctx context.Context) {
 			accessedRoles := roleByEvent[event.Type]
 			var accessed bool
 			for _, role := range accessedRoles {
-				if role == game.hub.clients[token.ID].role {
+				if role == game.hub.clients[jwtKey].role {
 					accessed = true
 				}
 			}
 
 			if !accessed {
-				game.hub.clients[token.ID].conn.WriteMessage(1, []byte("permission denied"))
+				game.hub.clients[jwtKey].conn.WriteMessage(1, []byte("permission denied"))
 
 				continue
 			}
@@ -256,37 +256,44 @@ func (game *Game) runGame(ctx context.Context) {
 
 			switch event.Type {
 			case StartGame:
+				if len(game.players) == 0 {
+					game.hub.clients[jwtKey].conn.WriteMessage(1, []byte("cannot start game: no players"))
+
+					continue
+				}
+
 				game.currentStep = Grettings
 
 				newDuration = 10 * time.Second
 			case Join:
-				var firstPlayer *Player
-				for _, pl := range game.players {
-					firstPlayer = pl
-					break
-				}
-
-				if len(game.players) == 1 && firstPlayer.client.role == Leader {
-					game.currentPlayerID = token.ID
-					game.playersQueueIDByUserID[token.ID] = len(game.playersQueueIDByUserID) + 1
-					game.playersUserIDByQueueID[len(game.playersUserIDByQueueID)+1] = token.ID
-				}
-
-				game.players[game.hub.clients[token.ID]] = &Player{
-					client: game.hub.clients[token.ID],
-					score:  0,
-				}
-
 				// todo: getting user image
 				joinServer := JoinServerEvent{
-					UserID:   token.ID,
+					QueueID:  0,
 					Nickname: token.Login,
 				}
 
+				if game.hub.clients[jwtKey].role == Leader {
+					game.sendServerEvent(JoinServer, joinServer, 0)
+
+					continue
+				}
+
+				game.players[game.hub.clients[jwtKey]] = &Player{
+					client: game.hub.clients[jwtKey],
+					score:  0,
+				}
+
+				queueID := len(game.playersQueueIDByToken) + 1
+
+				game.playersQueueIDByToken[jwtKey] = queueID
+				game.playersTokenByQueueID[queueID] = jwtKey
+
+				joinServer.QueueID = queueID
+
 				game.sendServerEvent(JoinServer, joinServer, 0)
 			case Disconnect:
-				if _, ok := game.players[game.hub.clients[token.ID]]; ok {
-					delete(game.players, game.hub.clients[token.ID])
+				if _, ok := game.players[game.hub.clients[jwtKey]]; ok {
+					delete(game.players, game.hub.clients[jwtKey])
 				}
 
 				disconnectServer := DisconnectServerEvent{
@@ -317,15 +324,15 @@ func (game *Game) runGame(ctx context.Context) {
 				game.sendServerEvent(ChooseQuestServer, chooseQuest, time.Now().In(time.UTC).Add(newDuration).Unix())
 			case GetQuest:
 				if game.currentStep == Getting {
-					player := game.players[game.hub.clients[token.ID]]
+					player := game.players[game.hub.clients[jwtKey]]
 					if player.client.role == User {
 						game.currentStep = Answering
-						game.currentPlayerID = game.players[game.hub.clients[token.ID]].client.id
+						game.currentPlayerID = game.playersQueueIDByToken[jwtKey]
 
 						newDuration = 20 * time.Second
 
 						takenQuest := TakenQuestServerEvent{
-							UserID: token.ID,
+							QueueID: game.playersQueueIDByToken[jwtKey],
 						}
 
 						game.sendServerEvent(TakenQuestServer, takenQuest, time.Now().In(time.UTC).Add(newDuration).Unix())
@@ -350,12 +357,12 @@ func (game *Game) runGame(ctx context.Context) {
 						game.currentStep = Final
 						newDuration = 5 * time.Minute
 
-						var winnerID uint64
+						var winnerID int
 						var maxScore int
 						for _, player := range game.players {
 							if player.score > maxScore {
 								maxScore = player.score
-								winnerID = player.client.id
+								winnerID = game.playersQueueIDByToken[player.client.token]
 							}
 						}
 
@@ -367,17 +374,17 @@ func (game *Game) runGame(ctx context.Context) {
 				}
 
 				curQuest := game.Rounds[game.currentRound-1].Themes[game.currentTheme-1].Quests[game.currentQuestion-1]
-				game.players[game.hub.clients[game.currentPlayerID]].score += curQuest.Price
+				game.players[game.hub.clients[game.playersTokenByQueueID[game.currentPlayerID]]].score += curQuest.Price
 
-				if uint64(len(game.players)) > game.currentPlayerID {
-					game.currentPlayerID = game.playersUserIDByQueueID[game.playersQueueIDByUserID[game.currentPlayerID]+1]
+				if len(game.players) > game.currentPlayerID {
+					game.currentPlayerID++
 				} else {
-					game.currentPlayerID = game.playersUserIDByQueueID[1]
+					game.currentPlayerID = 1
 				}
 
 				scoreChanged := ScoreChangedServerEvent{
-					UserID: game.currentPlayerID,
-					Score:  game.players[game.hub.clients[game.currentPlayerID]].score,
+					QueueID: game.currentPlayerID,
+					Score:   game.players[game.hub.clients[jwtKey]].score,
 				}
 
 				game.sendServerEvent(AnswerAcceptedServer, nil, time.Now().In(time.UTC).Add(newDuration).Unix())
@@ -402,12 +409,12 @@ func (game *Game) runGame(ctx context.Context) {
 						game.currentStep = Final
 						newDuration = 5 * time.Minute
 
-						var winnerID uint64
+						var winnerID int
 						var maxScore int
 						for _, player := range game.players {
 							if player.score > maxScore {
 								maxScore = player.score
-								winnerID = player.client.id
+								winnerID = game.playersQueueIDByToken[player.client.token]
 							}
 						}
 
@@ -420,17 +427,17 @@ func (game *Game) runGame(ctx context.Context) {
 				}
 
 				curQuest := game.Rounds[game.currentRound-1].Themes[game.currentTheme-1].Quests[game.currentQuestion-1]
-				game.players[game.hub.clients[game.currentPlayerID]].score -= curQuest.Price
+				game.players[game.hub.clients[jwtKey]].score -= curQuest.Price
 
-				if uint64(len(game.players)) > game.currentPlayerID {
-					game.currentPlayerID = game.playersUserIDByQueueID[game.playersQueueIDByUserID[game.currentPlayerID]+1]
+				if len(game.players) > game.currentPlayerID {
+					game.currentPlayerID++
 				} else {
-					game.currentPlayerID = game.playersUserIDByQueueID[1]
+					game.currentPlayerID = 1
 				}
 
 				scoreChanged := ScoreChangedServerEvent{
-					UserID: game.currentPlayerID,
-					Score:  game.players[game.hub.clients[game.currentPlayerID]].score,
+					QueueID: game.currentPlayerID,
+					Score:   game.players[game.hub.clients[jwtKey]].score,
 				}
 
 				game.sendServerEvent(ScoreChangedServer, scoreChanged, time.Now().In(time.UTC).Add(newDuration).Unix())
@@ -515,7 +522,7 @@ func (game *Game) runGame(ctx context.Context) {
 				game.currentTheme = themeID
 
 				getQuest := GetQuestServerEvent{
-					UserID: game.currentPlayerID,
+					QueueID: game.currentPlayerID,
 				}
 
 				newDuration = 10 * time.Second
@@ -549,12 +556,12 @@ func (game *Game) runGame(ctx context.Context) {
 						game.currentStep = Final
 						newDuration = 5 * time.Minute
 
-						var winnerID uint64
+						var winnerID int
 						var maxScore int
 						for _, player := range game.players {
 							if player.score > maxScore {
 								maxScore = player.score
-								winnerID = player.client.id
+								winnerID = game.playersQueueIDByToken[player.client.token]
 							}
 						}
 
@@ -566,17 +573,17 @@ func (game *Game) runGame(ctx context.Context) {
 				}
 
 				curQuest := game.Rounds[game.currentRound-1].Themes[game.currentTheme-1].Quests[game.currentQuestion-1]
-				game.players[game.hub.clients[game.currentPlayerID]].score -= curQuest.Price
+				game.players[game.hub.clients[game.playersTokenByQueueID[game.currentPlayerID]]].score -= curQuest.Price
 
-				if uint64(len(game.players)) > game.currentPlayerID {
-					game.currentPlayerID = game.playersUserIDByQueueID[game.playersQueueIDByUserID[game.currentPlayerID]+1]
+				if len(game.players) > game.currentPlayerID {
+					game.currentPlayerID++
 				} else {
-					game.currentPlayerID = game.playersUserIDByQueueID[1]
+					game.currentPlayerID = 1
 				}
 
 				scoreChanged := ScoreChangedServerEvent{
-					UserID: game.currentPlayerID,
-					Score:  game.players[game.hub.clients[game.currentPlayerID]].score,
+					QueueID: game.currentPlayerID,
+					Score:   game.players[game.hub.clients[game.playersTokenByQueueID[game.currentPlayerID]]].score,
 				}
 
 				game.sendServerEvent(ScoreChangedServer, scoreChanged, time.Now().In(time.UTC).Add(newDuration).Unix())

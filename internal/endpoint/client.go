@@ -75,16 +75,33 @@ func (c *Client) readPump() {
 			break
 		}
 
-		var event ClientEvent
+		type userEvent struct {
+			Type EventType
+			Data json.RawMessage
+		}
 
-		err = json.Unmarshal(message, &event)
+		var usrEvent userEvent
+
+		err = json.Unmarshal(message, &usrEvent)
 		if err != nil {
 			c.conn.WriteMessage(1, []byte("incorrect data"))
 
 			continue
 		}
 
-		c.hub.game.eventChannel <- &event
+		event := &ClientEvent{
+			Type:  usrEvent.Type,
+			Token: c.token,
+			Data:  usrEvent.Data,
+		}
+
+		if event.Type == "" {
+			c.conn.WriteMessage(1, []byte("incorrect event type"))
+
+			continue
+		}
+
+		c.hub.game.eventChannel <- event
 	}
 }
 
@@ -181,7 +198,7 @@ func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 
 	var hub *Hub
 	var role Role
-	if errCreateGame != nil {
+	if errCreateGame == nil {
 		game := &Game{
 			Name:   "someRandomName",
 			Author: "someRandomAuthor",
