@@ -1,0 +1,2694 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package name="Самоходная пизда" version="4" id="bfcc5575-7390-4609-82f2-466b407478c5" date="22.03.2021" difficulty="5"
+         xmlns="http://vladimirkhil.com/ygpackage3.0.xsd">
+    <info>
+        <authors>
+            <author>gaspar</author>
+        </authors>
+    </info>
+    <rounds>
+        <round name="для ГЕЙмеров">
+            <themes>
+                <theme name="Флаги долбоебов (осуждаю)">
+                    <questions>
+                        <question price="100">
+                            <scenario>
+                                <atom type="image">@tumblr_phh6g7cmTY1tbc693_1280.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>трансильвания</answer>
+                            </right>
+                        </question>
+                        <question price="200">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1000</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@JJpcow9FpUE.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Нелегитимное государство (минус очки)</answer>
+                            </right>
+                        </question>
+                        <question price="300">
+                            <scenario>
+                                <atom type="image">@1200px-Pansexuality_Pride_Flag.svg.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Пансексуалы</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@image.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Асексуалы</answer>
+                            </right>
+                        </question>
+                        <question price="500">
+                            <scenario>
+                                <atom type="image">@Bisexual-Flag-Graphic-e1475444413737-1024x577.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Бисексуалы</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@Флаг_Латвии-0.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Латвия</answer>
+                            </right>
+                        </question>
+                        <question price="700">
+                            <scenario>
+                                <atom type="image">@post_5d3a570ebc61e-695x463.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Гендерквиры</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@1200px-Flag_of_Lithuania.svg.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Литва</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom type="image">@EvwgPQqWEAgEdEh.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Супернатуралы</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom type="image">@flag-mavrikiya.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Ов. Маврикий</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Старье (до 00-x)">
+                    <questions>
+                        <question price="100">
+                            <scenario>
+                                <atom type="image">@sf2.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Street Fighter 2</answer>
+                            </right>
+                        </question>
+                        <question price="200">
+                            <scenario>
+                                <atom type="image">@cc2.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Comand &amp; Conquer</answer>
+                            </right>
+                        </question>
+                        <question price="300">
+                            <scenario>
+                                <atom type="image">@re1.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Resident Evil</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@q1.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Quake</answer>
+                            </right>
+                        </question>
+                        <question price="500">
+                            <scenario>
+                                <atom type="image">@ff7.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Final Fantasy VII</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@outrun.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Outrun</answer>
+                            </right>
+                        </question>
+                        <question price="700">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">3500</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@cast 3.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Castelvania 3</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@mm3.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Mega Man 3</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom type="image">@nfs3hp.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Need for Speed 3: Hot Pursuit</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom type="image">@ihnmaims.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>I Have No Mouth But I Must Scream</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Игрушки">
+                    <questions>
+                        <question price="100">
+                            <scenario>
+                                <atom type="image">@дилдо.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Дилдо</answer>
+                            </right>
+                        </question>
+                        <question price="200">
+                            <scenario>
+                                <atom type="image">@геймпад.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Геймпад</answer>
+                            </right>
+                        </question>
+                        <question price="300">
+                            <scenario>
+                                <atom type="image">@бп.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Батплаг</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@анал.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Анальный шарики</answer>
+                            </right>
+                        </question>
+                        <question price="500">
+                            <scenario>
+                                <atom type="image">@джойстик.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Джойстик</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <type name="auction"/>
+                            <scenario>
+                                <atom type="image">@orig.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Пирамидка</answer>
+                            </right>
+                        </question>
+                        <question price="700">
+                            <scenario>
+                                <atom type="image">@516430-600x700-600x600.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Страпон</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@виброяйцо.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Виброяйцо</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom type="image">@вак.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Вакуумная помпа для члена</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom type="image">@палочка.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Палочка для уретры</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Игры по названиям DLC">
+                    <questions>
+                        <question price="100">
+                            <scenario>
+                                <atom>Old World Blues
+                                    Lonesome Road
+                                    Honest Hearts
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Fallout New Vegas</answer>
+                            </right>
+                        </question>
+                        <question price="200">
+                            <scenario>
+                                <atom>The Two Colonels
+                                    Sam's Story
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Metro Exodus</answer>
+                            </right>
+                        </question>
+                        <question price="300">
+                            <scenario>
+                                <atom>They Shall Not Pass
+                                    In The Name Of Tsar
+                                    Apocalypse
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Battlefield 1</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <scenario>
+                                <atom>Men At Arms
+                                    Death Or Dishonor
+                                    Awaking The Tiger
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Hearts of Iron IV</answer>
+                            </right>
+                        </question>
+                        <question price="500">
+                            <scenario>
+                                <atom>Vive la France!
+                                    Going East!
+                                    Scandinavia
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Eurotruck Simulator 2</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom>Ashes of Ariandel
+                                    The Ringed City
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Dark Souls 3</answer>
+                            </right>
+                        </question>
+                        <question price="700">
+                            <scenario>
+                                <atom>The Old Gods
+                                    Charlemagne
+                                    Holy Fury
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Crusaders Kings 2</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom>Blackwood
+                                    Greymoor
+                                    Summerset
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>TES: Online</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom>Leviathan
+                                    Firefight
+                                    From Ashes
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Mass Effect 3</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom>The Last Stand
+                                    Chaos Rising
+                                    Retribution
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Warhammer 40k Dawn of War 2</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Лучшие парни">
+                    <questions>
+                        <question price="100">
+                            <scenario>
+                                <atom type="image">@5PPWWAIJGro.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Астольфо (Fate)</answer>
+                            </right>
+                        </question>
+                        <question price="200">
+                            <scenario>
+                                <atom type="image">@1472572872186888936.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Феликс (Re: Zero)</answer>
+                            </right>
+                        </question>
+                        <question price="300">
+                            <scenario>
+                                <atom type="image">@qlksozH4w4Q.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Link (The legend of Zelda)</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@fioulejWtY8.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Venti (Genshin Impact)</answer>
+                            </right>
+                        </question>
+                        <question price="500">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1000</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@n77D5VkBbzU.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Минус очки</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@xaNNCRqibvk.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Ella Hollywood</answer>
+                            </right>
+                        </question>
+                        <question price="700">
+                            <scenario>
+                                <atom type="image">@канцаки хидери.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Канцаки Хидери (Blend S)</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <type name="auction"/>
+                            <scenario>
+                                <atom type="image">@LmxYqyCPj7o.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Лио Фотия и Гало Тимос (Puromea)</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom type="image">@Zam8uqJDxQU.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Ли Хун (Suicide boy )</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom type="image">@маре белло фиоре.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Маре Белло Фиоре (Overlord)</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Дефолтный &quot;че за игра&quot;">
+                    <questions>
+                        <question price="100">
+                            <scenario>
+                                <atom type="image">@RifHJsQ5Tu0.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Minecraft</answer>
+                            </right>
+                        </question>
+                        <question price="200">
+                            <scenario>
+                                <atom type="image">@nvwNIFhEQxo.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Silent Hill</answer>
+                            </right>
+                        </question>
+                        <question price="300">
+                            <scenario>
+                                <atom type="image">@p1FWhikUd_8.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Dark Souls 2</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <type name="auction"/>
+                            <scenario>
+                                <atom type="image">@SMB5x7yH0cw.jpg</atom>
+                                <atom type="say">Назвать обе игры</atom>
+                            </scenario>
+                            <right>
+                                <answer>Half-Life 2 / C&amp;C: Renegade</answer>
+                            </right>
+                        </question>
+                        <question price="500">
+                            <scenario>
+                                <atom type="image">@TSr2PFVE6dY.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>C&amp;C: Red Alert 2</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@purble-place-21855-6.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Purble Palace</answer>
+                            </right>
+                        </question>
+                        <question price="700">
+                            <scenario>
+                                <atom type="image">@Скриншот 24-03-2021 124548.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Watch Dogs Legion</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@1616537304063.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Silent Hill 3</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom type="image">@7kCmCDgnaR4.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Fallout 4</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom type="image">@CF2op3yh0_Q.jpg</atom>
+                                <atom type="say">Назвать оригинал</atom>
+                            </scenario>
+                            <right>
+                                <answer>DeathLoop</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Я думал, куда добавить тему про аниме, поэтому она тут, дорогие геймеры">
+                    <questions>
+                        <question price="100">
+                            <scenario>
+                                <atom type="video">@Токийский гуль.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Токийский гуль</answer>
+                            </right>
+                        </question>
+                        <question price="200">
+                            <scenario>
+                                <atom type="video">@Евангелион.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Евангелион</answer>
+                            </right>
+                        </question>
+                        <question price="300">
+                            <scenario>
+                                <atom type="video">@килл ла килл.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Килл ла Килл</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1000</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@e2DpF0kHS9s.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Минус очки</answer>
+                            </right>
+                        </question>
+                        <question price="500">
+                            <type name="auction"/>
+                            <scenario>
+                                <atom type="video">@Хельсинг.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Хельсинг</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="video">@Юри Юри.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Юри Юри</answer>
+                            </right>
+                        </question>
+                        <question price="700">
+                            <scenario>
+                                <atom type="video">@Моногатари.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Гатари</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="video">@nichijou (online-video-cutter.com).mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Повседневность</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom type="video">@blend s (online-video-cutter.com).mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Blend S</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom type="video">@Деувушки дополненной реальности.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Девушки дополненной реальности</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+            </themes>
+        </round>
+        <round name="культурный код">
+            <themes>
+                <theme name="Живо пись (художник + 1.5x за работу)">
+                    <questions>
+                        <question price="200">
+                            <scenario>
+                                <atom type="image">@Анри Матис, Танец.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Анри Матис, Танец</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@Энди Уорхол, Банки с супом Кэмпбелл.jpeg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Энди Уорхол, Банки с супом "Кэмпбелл"</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@Клод Моне, Кувшинки.jpeg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Клод Моне, Кувшинки</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@Эдуард Мане, Самоубийца.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Эдуард Мане, Самоубийца</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom type="image">@Эжен Делакруа, Свобода ведущая народ.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Эжен Делакруа, Свобода, ведущая народ</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="image">@Ян Вермеер, Урок музыки.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Ян Вермеер, Урок музыки</answer>
+                            </right>
+                        </question>
+                        <question price="1400">
+                            <scenario>
+                                <atom type="image">@Василий Верещагин, Апофеоз войны.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Василий Верещагин, Апофеоз войны</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <type name="auction"/>
+                            <scenario>
+                                <atom type="image">@Пит Мондриан, Буги-Вуги на Бродвее.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Пит Мондриан, Буги-Вуги на Бродвее</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom type="image">@Ганс Гольбей Мл., Мертвый Христос в гробу.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Ганс Гольбей Мл., Мёртвый Христос в гробу</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <scenario>
+                                <atom type="image">@Фрида Кало, Раненый олень.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Фрида Кало, Раненый олень</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Интернет-порно-хуежники">
+                    <questions>
+                        <question price="200">
+                            <scenario>
+                                <atom type="image">@shadman.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Shadman</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@cutesexyrobutts.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Cutesexyrobutts</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@aromasensei.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>AromaSensei</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@kajinman.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Kajinman</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom type="image">@optionaltypo.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>OptionalTypo</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="image">@sakimichan.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>SakimiChan</answer>
+                            </right>
+                        </question>
+                        <question price="1400">
+                            <scenario>
+                                <atom type="image">@Flick the Thief.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Flick the Thief</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <scenario>
+                                <atom type="image">@BBC-Chan.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>BBC-Chan</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom type="image">@Lerapi.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>LeraPi</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <scenario>
+                                <atom type="image">@combos-n-doodles.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Combos-n-Doodles</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Бездельники, графоманы и их работы">
+                    <questions>
+                        <question price="200">
+                            <scenario>
+                                <atom type="video">@752000830114.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Рене Декарт</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@N4Tvrctp4Hs.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@EI_ecBRq4ps.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Платон</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@ejjSFgTa0VQ.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Альбер Камю</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@A2DYaj5hGWQ.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Томас Гоббс</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom>Поступай с другими так, как хотел бы, чтобы с тобой поступали другие</atom>
+                            </scenario>
+                            <right>
+                                <answer>Иммануил Кант</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="image">@j8LIX5LUuY0.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Гегель</answer>
+                            </right>
+                        </question>
+                        <question price="1400">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1500</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@unknown.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Минус очки</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <scenario>
+                                <atom type="image">@fD1PGxA5qjM.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Людвиг Витгенштейн</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <type name="sponsored"/>
+                            <scenario>
+                                <atom type="image">@1605984644_prison-school.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Мишель Фуко</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <scenario>
+                                <atom type="image">@pbGUQii0OiY.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Макс Штирнер</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Чета из истории">
+                    <questions>
+                        <question price="200">
+                            <scenario>
+                                <atom type="image">@жфк.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Убийство Кеннеди</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <scenario>
+                                <atom type="video">@videoplayback.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Отравление Навального</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@френч револютион.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Великая французская революция</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@utyjwbl.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Нанкинская резня</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom type="image">@Oa0eY0M8HFE.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Завоевания Александра Великого</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="image">@кримиан вор.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Крымская война</answer>
+                            </right>
+                        </question>
+                        <question price="1400">
+                            <scenario>
+                                <atom type="image">@продажа опиума в китае британией и последующие опиумные войны
+                                    войны.png
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Продажа опиума британцами в Китае</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <scenario>
+                                <atom>В 410 году он разграбил рим и в этот же год умер</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@6tn3j8OOQ1g.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Аларих, вождь вестготов</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom>Период истории древнего Китая, известный как борьба и противостояние трех
+                                    государств — Вэй, У и Шу
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Период троецарствия</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <type name="sponsored"/>
+                            <scenario>
+                                <atom type="image">@столпник.jpg</atom>
+                                <atom type="say">Что за чел на столпе</atom>
+                            </scenario>
+                            <right>
+                                <answer>Столпник</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Герои нашего времени">
+                    <questions>
+                        <question price="200">
+                            <scenario>
+                                <atom type="image">@обама.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Обама</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <scenario>
+                                <atom type="video">@undefined.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Максим Кац</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@7dz7cmjMYkA.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Деб</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@RW2o0RXUAhc.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Джо Байден</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom type="image">@Bingus.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@бингус.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Бингус</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="video">@Видео 24-03-2021 21_08_24.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Дэвид Линч</answer>
+                            </right>
+                        </question>
+                        <question price="1400">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">5000</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@BQAQZ7S_6rg.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Иисус Христос</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <scenario>
+                                <atom type="image">@великий лидер xi нефритовый стержень.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Великий лидер Xi нефритовый стержень</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom type="video">@videoplayback_1.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Джеффри Эпштейн</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <scenario>
+                                <atom type="image">@депутат валентин.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Депутат Валентин</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Классика))0)">
+                    <questions>
+                        <question price="200">
+                            <scenario>
+                                <atom type="image">@hell_map1_min.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Ад из Божественной Комедии Данте</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <scenario>
+                                <atom>Люблю их ножки; только вряд
+                                    Найдете вы в России целой
+                                    Три пары стройных женских ног.
+                                    Ах! долго я забыть не мог
+                                    Две ножки… Грустный, охладелый,
+                                    Я всё их помню, и во сне
+                                    Они тревожат сердце мне.
+                                </atom>
+                                <atom type="say">Откуда строки</atom>
+                            </scenario>
+                            <right>
+                                <answer>А.С. Пушкин, Евгений Онегин</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="voice">@Иоганесс Брамс, Венгерский танец.mp3</atom>
+                            </scenario>
+                            <right>
+                                <answer>Иоганесс Брамс, Венгерский танец</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@vN6lxa6110I.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Орфей и Эвредика</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <type name="sponsored"/>
+                            <scenario>
+                                <atom>Пьеса, сюжет которой повествует о мальчике, который пытался избежать пророчества о
+                                    том, что он убьёт своего отца и женится на своей матери.
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Царь Эдип</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="voice">@Бетховен, симфония №7.mp3</atom>
+                            </scenario>
+                            <right>
+                                <answer>Людвиг Бетховен, Симфония №7</answer>
+                            </right>
+                        </question>
+                        <question price="1400">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">3000</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@венец.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@ZFlayc-yPKg.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Уильям Шейкспир, Венецианский купец</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1500</param>
+                            </type>
+                            <scenario>
+                                <atom type="voice">@подлянка.mp3</atom>
+                            </scenario>
+                            <right>
+                                <answer>Минус очки</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom type="voice">@Гектор Берлиоз, Фантастическая симфония.mp3</atom>
+                            </scenario>
+                            <right>
+                                <answer>Гектор Берлиоз, Фантастическая симфония</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <scenario>
+                                <atom>Сборник стихотворений Публия Вергилия, написанных в жанре пастушеской поэзии
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Буколики</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Имаге-сонг (назвать песню и/или песню)">
+                    <questions>
+                        <question price="200">
+                            <scenario>
+                                <atom type="image">@Скриншот 24-03-2021 220411.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="video">@57560450895b.360.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Марти Роббинс - Big Iron</answer>
+                            </right>
+                        </question>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@gbmcRKqYRKk.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>N.W.A - Fuck the Police</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="video">@6dde394a8e61.360.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Уитни Хьюстон - I Will Always Love You</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@l5jYsh95lfI.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>MGMT - Electric Feel</answer>
+                            </right>
+                        </question>
+                        <question price="1000">
+                            <scenario>
+                                <atom type="video">@17baf6219d4f.360.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Hall &amp; Oates - Out of Touch</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1500</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@bm75_jg3_D4.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Минус очки</answer>
+                            </right>
+                        </question>
+                        <question price="1400">
+                            <scenario>
+                                <atom type="image">@02aba0f35f0c41d83348a44ba5e3b88a.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>American Football</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <scenario>
+                                <atom type="image">@rtyr.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@dsadsad.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Linkin Park</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom type="video">@9a01d3fdde25.360.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Николай Римский-Корсаков - Полёт шмеля</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <scenario>
+                                <atom type="video">@b1be0c941391.360.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Vance Joy - Riptide</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+            </themes>
+        </round>
+        <round name="пойдём по кину">
+            <themes>
+                <theme name="Минималистичный постер">
+                    <questions>
+                        <question price="300">
+                            <scenario>
+                                <atom type="image">@я легенда.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@zfv2EEcNDiM.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Я - легенда</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@унес приз.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@rM6gny0i90Q.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Унесенные призраками</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom type="image">@чел.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@u8gxxVaOQsE.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Челюсти</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <type name="sponsored"/>
+                            <scenario>
+                                <atom type="image">@101.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@8FR3LGGnM-A.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>101 далматинец</answer>
+                            </right>
+                        </question>
+                        <question price="1500">
+                            <scenario>
+                                <atom type="image">@пристиж.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@sWac7Z04Aks.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Престиж</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom type="image">@зв4.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@okGVDoqs0dE.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Звёздные Войны 4: Новая Надежда</answer>
+                            </right>
+                        </question>
+                        <question price="2100">
+                            <scenario>
+                                <atom type="image">@косм од.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@S4FZcJi-2sY.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Космическая Одиссея 2001</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <scenario>
+                                <atom type="image">@ммеме.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@Y1PjoT66qAk.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Мементо</answer>
+                            </right>
+                        </question>
+                        <question price="2700">
+                            <scenario>
+                                <atom type="image">@топ ган.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Топ Ган</answer>
+                            </right>
+                        </question>
+                        <question price="3000">
+                            <scenario>
+                                <atom type="image">@виплаш.jpg</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@4Gs6l3y2W9I.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Одержимость</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Черно-белые актёры">
+                    <questions>
+                        <question price="300">
+                            <scenario>
+                                <atom type="image">@VcqLFuDGNyw.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Дэвид Линч</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@wT73wM1eVVo.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Лея Сейду</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom type="image">@regular_detail_picture-ed7f8da43535e18e3680f804f4745a36.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Бруно Ганц</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="image">@BpOSfOIKweg.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Мэтт Дилон</answer>
+                            </right>
+                        </question>
+                        <question price="1500">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">3000</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@2jiaum7rQxw.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Хоакин Феникс</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom type="image">@unnamed.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Анатолий Солоницын</answer>
+                            </right>
+                        </question>
+                        <question price="2100">
+                            <scenario>
+                                <atom type="image">@ibHVEb2ZkWM.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Пол Дано</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <scenario>
+                                <atom type="image">@киран хайндс.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Киран Хайндс</answer>
+                            </right>
+                        </question>
+                        <question price="2700">
+                            <scenario>
+                                <atom type="image">@960x960.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Майкл Китон</answer>
+                            </right>
+                        </question>
+                        <question price="3000">
+                            <scenario>
+                                <atom type="image">@5d5d49e44afbf91e77263987.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Эзра Миллер</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Родина кино">
+                    <questions>
+                        <question price="300">
+                            <scenario>
+                                <atom>Один из самых престижных кинофестивалей проходит именно в этом городе</atom>
+                            </scenario>
+                            <right>
+                                <answer>Канны</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@луи де фюнес.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Луи де Фюнес</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom type="image">@приб ла-сьота бр люмьер.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Прибытие поезда на вокзал Ла-Сьота, Братья Люмьер</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="image">@чо за перс - пут на луну жорж мельес.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Путешествие на Луну, Жорж Мельес</answer>
+                            </right>
+                        </question>
+                        <question price="1500">
+                            <scenario>
+                                <atom type="image">@чо за актер.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Жан-Поль Бельмондо</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom type="image">@кто это.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Жан-Люк Годар</answer>
+                            </right>
+                        </question>
+                        <question price="2100">
+                            <scenario>
+                                <atom>Вход в пустоту
+                                    Любовь
+                                    Экстаз
+                                </atom>
+                                <atom type="say">Кто режиссер</atom>
+                            </scenario>
+                            <right>
+                                <answer>Гаспар Ноэ</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <scenario>
+                                <atom>400 ударов
+                                    стреляйте в пианиста
+                                    Жюль и Джим
+                                </atom>
+                                <atom type="say">Кто режиссер</atom>
+                            </scenario>
+                            <right>
+                                <answer>Франсуа Трюффо</answer>
+                            </right>
+                        </question>
+                        <question price="2700">
+                            <scenario>
+                                <atom type="image">@o3WVV2HMhX4.jpg</atom>
+                                <atom type="say">Как называется фото</atom>
+                            </scenario>
+                            <right>
+                                <answer>Вид из окна</answer>
+                            </right>
+                        </question>
+                        <question price="3000">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">500</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@укау.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Минус очки</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Детали из кинов">
+                    <questions>
+                        <question price="300">
+                            <scenario>
+                                <atom type="image">@золотой снитч 5.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Золотой снитч</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@ZY2Fu1hXIPw.jpg</atom>
+                                <atom type="say">Из какого фильма</atom>
+                            </scenario>
+                            <right>
+                                <answer>Бойцовский клуб</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom>Как рождались орки во вселенной Средиземья</atom>
+                            </scenario>
+                            <right>
+                                <answer>В чанах с говном</answer>
+                                <answer>Любой подобный ответ</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="image">@rK41OhtIh0c.jpg</atom>
+                                <atom type="say">Что за комикс</atom>
+                            </scenario>
+                            <right>
+                                <answer>Скотт Пилигрим против всех</answer>
+                            </right>
+                        </question>
+                        <question price="1500">
+                            <scenario>
+                                <atom type="image">@что с домом было.jpg</atom>
+                                <atom type="say">Что было с этим домом на съемках</atom>
+                            </scenario>
+                            <right>
+                                <answer>Дом сгорел, но пленка испортилась. Пришлось строить дом и снимать заново
+                                </answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom type="image">@молоко.jpg</atom>
+                                <atom type="say">Что их объединяет</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@77QK1Yu78Gc.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Любовь к молоку</answer>
+                            </right>
+                        </question>
+                        <question price="2100">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1500</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@gzV2G0QCWik.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Минус очки</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <scenario>
+                                <atom>Что происходило на планете рядом с черной дырой Гаргантюа</atom>
+                            </scenario>
+                            <right>
+                                <answer>Время искривлялось</answer>
+                            </right>
+                        </question>
+                        <question price="2700">
+                            <scenario>
+                                <atom type="image">@BqCbza3Dvwo.jpg</atom>
+                                <atom type="say">Из какого фильма</atom>
+                            </scenario>
+                            <right>
+                                <answer>Лига Справедливости Зака Снайдера</answer>
+                            </right>
+                        </question>
+                        <question price="3000">
+                            <type name="auction"/>
+                            <scenario>
+                                <atom type="image">@MFvc7iv0fKQ.jpg</atom>
+                                <atom type="say">Из какого фильма</atom>
+                            </scenario>
+                            <right>
+                                <answer>Бэтмен против Супермена</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Дефолтный &quot;откуда кадр&quot;">
+                    <questions>
+                        <question price="300">
+                            <scenario>
+                                <atom type="image">@Goodfellas.BD-Rip.720p.DVD9_.mkv-00012.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Славные парни</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1500</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@tnie3_DiIM8.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Ностальгия</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1500</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@wK0MMdGYzBc.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Минус очки</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="image">@AxGxamwh0gM.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Дюна</answer>
+                            </right>
+                        </question>
+                        <question price="1500">
+                            <scenario>
+                                <atom type="image">@2sGR0YI5-uo.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Темный Рыцарь Возрождение</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom type="image">@FFeEMjiWyCQ.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Мистер Робот</answer>
+                            </right>
+                        </question>
+                        <question price="2100">
+                            <scenario>
+                                <atom type="image">@кейн.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Гражданин Кейн</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <scenario>
+                                <atom type="image">@F_iJ20HnEwM.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Она</answer>
+                            </right>
+                        </question>
+                        <question price="2700">
+                            <scenario>
+                                <atom type="image">@посл.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>На последнем дыхании</answer>
+                            </right>
+                        </question>
+                        <question price="3000">
+                            <scenario>
+                                <atom type="image">@ночь.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Под покровом ночи</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Фильм по раскадровке">
+                    <questions>
+                        <question price="300">
+                            <scenario>
+                                <atom type="image">@апс.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Апокалипсис сегодня</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <scenario>
+                                <atom type="image">@солнц.jpeg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Солнцестояние</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom type="image">@терминатор 2.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Терминатор 2</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="image">@такс.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Таксист</answer>
+                            </right>
+                        </question>
+                        <question price="1500">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">2000</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@начало.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Начало</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom type="image">@гамп.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Форрест Гамп</answer>
+                            </right>
+                        </question>
+                        <question price="2100">
+                            <scenario>
+                                <atom type="image">@гейм.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Игра Престолов</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <scenario>
+                                <atom type="image">@ран.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Ран</answer>
+                            </right>
+                        </question>
+                        <question price="2700">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1000</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@прочь.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Прочь</answer>
+                            </right>
+                        </question>
+                        <question price="3000">
+                            <type name="sponsored"/>
+                            <scenario>
+                                <atom type="image">@страж.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Стражи Галактики</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Вольный пересказ">
+                    <questions>
+                        <question price="300">
+                            <scenario>
+                                <atom>Два солдата отправляются предупредить Шерлока Холмса в другой части фронта
+                                    остановить атаку на немцев
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>1917</answer>
+                            </right>
+                        </question>
+                        <question price="600">
+                            <type name="auction"/>
+                            <scenario>
+                                <atom>Не стоит доверять цыганам</atom>
+                            </scenario>
+                            <right>
+                                <answer>Спиздили</answer>
+                            </right>
+                        </question>
+                        <question price="900">
+                            <scenario>
+                                <atom>Вся сеймейка устраивается на работу после предложения от друга сына</atom>
+                            </scenario>
+                            <right>
+                                <answer>Паразиты</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom>Друзья скинулись на покер и проебали, а затем устроились на работу своих соседей
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Карты, деньги, два ствола</answer>
+                            </right>
+                        </question>
+                        <question price="1500">
+                            <scenario>
+                                <atom>Два друга недовольны, что в их кино будут сниматься Бен Аффлек и Мэтт Дэймон
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Джей и Молчаливый Боб наносят ответный удар</answer>
+                            </right>
+                        </question>
+                        <question price="1800">
+                            <scenario>
+                                <atom>Мужик весь фильм показывает, как продавать ручку</atom>
+                            </scenario>
+                            <right>
+                                <answer>Волк с Уолл-Стрит</answer>
+                            </right>
+                        </question>
+                        <question price="2100">
+                            <scenario>
+                                <atom>Компания цветных ребят неудачно ограбила ювелирный магазин</atom>
+                            </scenario>
+                            <right>
+                                <answer>Бешеные псы</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <scenario>
+                                <atom>Мужик спасает единственную в мире беременную женщину</atom>
+                            </scenario>
+                            <right>
+                                <answer>Дитя человеческое</answer>
+                            </right>
+                        </question>
+                        <question price="2700">
+                            <scenario>
+                                <atom>Два мужика и вожатый поехали на отдых в зону</atom>
+                            </scenario>
+                            <right>
+                                <answer>Сталкер</answer>
+                            </right>
+                        </question>
+                        <question price="3000">
+                            <scenario>
+                                <atom>Иммигрант останавливает своих соотечестников, убивая последних из них</atom>
+                            </scenario>
+                            <right>
+                                <answer>Человек из стали</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+            </themes>
+        </round>
+        <round name="прочий бред">
+            <themes>
+                <theme name="Новый уровень мэшапов">
+                    <questions>
+                        <question price="400">
+                            <scenario>
+                                <atom type="voice">@Radiohead - Creep.mp3</atom>
+                                <atom type="say">Оригинал песни</atom>
+                            </scenario>
+                            <right>
+                                <answer>Radiohead - Creep</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="voice">@Закамский квас _ NV.mp3</atom>
+                                <atom type="say">Из какой игры музыка</atom>
+                            </scenario>
+                            <right>
+                                <answer>Fallout New Vegas</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">2000</param>
+                            </type>
+                            <scenario>
+                                <atom type="voice">@Котопёс _ 1Kla$$ - Почему.mp3</atom>
+                            </scenario>
+                            <right>
+                                <answer>Котопёс / 1Kla$$ - Почему</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <scenario>
+                                <atom type="voice">@1Kla$$ - Почему _ ГрОб - Всё идёт по плану.mp3</atom>
+                            </scenario>
+                            <right>
+                                <answer>1Kla$$ - Почему / ГрОб - Всё идёт по плану</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <type name="auction"/>
+                            <scenario>
+                                <atom type="voice">@Песенка черепахи и львёнка _ МУККА - Девочка с каре.mp3</atom>
+                            </scenario>
+                            <right>
+                                <answer>МУККА - Девочка с каре / Песенка черепахи и львёнка</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <scenario>
+                                <atom type="voice">@Doom 2016 и Валентин Стрыкало - Я бью женщин и детей.mp3</atom>
+                                <atom type="say">Игра и оригинал песни</atom>
+                            </scenario>
+                            <right>
+                                <answer>Doom 2016 / Валентин Стрыкало - Я бью женщин и детей</answer>
+                            </right>
+                        </question>
+                        <question price="2800">
+                            <scenario>
+                                <atom type="voice">@Марти Робинс - Big Iron _ От винта!.mp3</atom>
+                            </scenario>
+                            <right>
+                                <answer>Марти Роббинс - Big Iron / От винта!</answer>
+                            </right>
+                        </question>
+                        <question price="3200">
+                            <scenario>
+                                <atom type="voice">@Вот и помер дед Максим _ КиШ - Кукла Колдуна.mp3</atom>
+                            </scenario>
+                            <right>
+                                <answer>Вот и помер дед Максим / КиШ - Кукла колдуна</answer>
+                            </right>
+                        </question>
+                        <question price="3600">
+                            <scenario>
+                                <atom type="voice">@ФАБРИКА - Не родись красивой _ Гимн ассенизаторов.mp3</atom>
+                            </scenario>
+                            <right>
+                                <answer>ФАБРИКА - Не родись красивой / Гимн ассенизаторов</answer>
+                            </right>
+                        </question>
+                        <question price="4000">
+                            <scenario>
+                                <atom type="voice">@Гонщик нелегальный _ Teriyaki Boyz - Tokyo Drift.mp3</atom>
+                            </scenario>
+                            <right>
+                                <answer>Гонщик нелегальный / Teriyaki Boyz - Tokio Drift</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Невский в гостях">
+                    <questions>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@2GEl_jFE6Lg.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>У Невского</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@1397404459_821673999.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>У Джареда Лето</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="image">@7f55c953d083785adc0aae1c62bbc80d.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Аль Пачино</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <scenario>
+                                <atom type="image">@img7-45214.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>У Хоакина Феникса</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <scenario>
+                                <atom type="image">@20190627_152855-e1561643732804.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>У Дени де Вито</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <scenario>
+                                <atom type="image">@nevskii17052020-4.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>У Эдди Мёрфи</answer>
+                            </right>
+                        </question>
+                        <question price="2800">
+                            <scenario>
+                                <atom type="image">@UKYKGy7XnD0.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>У Клинта Иствуда</answer>
+                            </right>
+                        </question>
+                        <question price="3200">
+                            <scenario>
+                                <atom type="image">@scale_2400.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>У Владимира Мединского</answer>
+                            </right>
+                        </question>
+                        <question price="3600">
+                            <scenario>
+                                <atom type="image">@Скриншот 25-03-2021 015348.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>У Дольфа Лундгрена</answer>
+                            </right>
+                        </question>
+                        <question price="4000">
+                            <scenario>
+                                <atom type="image">@1484061361220254840.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>У Хью Лори</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Чо за митинг">
+                    <questions>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@протесты в Беларуси.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Протесты в Беларуси</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@майдан в на Украине 2014.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Майдан в/на Украине 2014</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <type name="auction"/>
+                            <scenario>
+                                <atom type="image">@Восстание декабристов.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Восстание декабристов</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <scenario>
+                                <atom type="image">@штурм Капитолия США, 2021.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Штурм Капитолия США</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <scenario>
+                                <atom type="image">@на болотной 2012.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Митинг на Болотной</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <scenario>
+                                <atom type="image">@митинги в Хабаровске 2020.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Митинги в Хабаровске</answer>
+                            </right>
+                        </question>
+                        <question price="2800">
+                            <scenario>
+                                <atom type="image">@кровавое воскресенье.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Кровавое воскресенье</answer>
+                            </right>
+                        </question>
+                        <question price="3200">
+                            <scenario>
+                                <atom type="image">@движение желтых жилетов, Франция 2018.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Движение жёлтых жилетов во Франции</answer>
+                            </right>
+                        </question>
+                        <question price="3600">
+                            <scenario>
+                                <atom type="image">@стачка на Путиловском заводе.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Стачка на Путиловском заводе</answer>
+                            </right>
+                        </question>
+                        <question price="4000">
+                            <scenario>
+                                <atom type="image">@Массовые демонстрации в Иране, 1979, Исламская революция.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Исламская революция</answer>
+                                <answer>Массовые демонстрации в Иране 1979</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Оверкросс">
+                    <questions>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@kkyFIhgyruA.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Бегущий по лезвию 2049 / Обливион</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@HYCGsb9ISCU.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Петро Порошенко / Дэвид Линч</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">3500</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@Скриншот 25-03-2021 151100.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Нифедов / БендерЧат</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <scenario>
+                                <atom type="image">@Флаг_Речи_Посполитой.png</atom>
+                            </scenario>
+                            <right>
+                                <answer>Речь Посполитая (Польша / Царство Литовское)</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <type name="auction"/>
+                            <scenario>
+                                <atom type="image">@мул.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Мул (Лошадь / Осёл)</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <scenario>
+                                <atom type="image">@ehKjzjUZEFY.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Андрей Гайдулян / Joy Division</answer>
+                            </right>
+                        </question>
+                        <question price="2800">
+                            <scenario>
+                                <atom type="image">@-7gr_TnbxdQ.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Густав Фринг / Мисато</answer>
+                            </right>
+                        </question>
+                        <question price="3200">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1000</param>
+                            </type>
+                            <scenario>
+                                <atom type="video">@1072812657165.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Минус очки</answer>
+                            </right>
+                        </question>
+                        <question price="3600">
+                            <scenario>
+                                <atom type="image">@toyota_highlander_4_2.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Тойота Хайлендер</answer>
+                            </right>
+                        </question>
+                        <question price="4000">
+                            <scenario>
+                                <atom type="image">@2RG5jH9dUt4.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Путин / Бонби</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Эх молодость">
+                    <questions>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@XgFd8H0lmAo.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Паша Техник</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@IRLSR5rL7ik.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Алексей Навальный</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="image">@wuU6XyCgt2Y.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Илья Мэддисон</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <scenario>
+                                <atom type="image">@ugJLz-7-RwY.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Джереми Айронс</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <scenario>
+                                <atom type="image">@санбой.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Пророк Санбой</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <type name="sponsored"/>
+                            <scenario>
+                                <atom type="image">@bIfyCNBSGOE.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Карл Урбан, Вигго Мортенсен</answer>
+                            </right>
+                        </question>
+                        <question price="2800">
+                            <scenario>
+                                <atom type="image">@саша 3.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Александр III</answer>
+                            </right>
+                        </question>
+                        <question price="3200">
+                            <scenario>
+                                <atom type="image">@и николаев.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Игорь Николаев</answer>
+                            </right>
+                        </question>
+                        <question price="3600">
+                            <scenario>
+                                <atom type="image">@403202.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Сэм Рокуэлл</answer>
+                            </right>
+                        </question>
+                        <question price="4000">
+                            <type name="auction"/>
+                            <scenario>
+                                <atom type="image">@EIKCGaFpnsg.jpg</atom>
+                                <atom type="say">Назвать всех</atom>
+                            </scenario>
+                            <right>
+                                <answer>Стив Бушеми, Адам Сэндлер, Брендан Фрейзер</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Большое чета ваще">
+                    <questions>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@секвойя.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Секвойя</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <scenario>
+                                <atom type="image">@57254999.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Башня Бурдж Халифа</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <type name="auction"/>
+                            <scenario>
+                                <atom>Самая большая пустыня на нашей планете</atom>
+                            </scenario>
+                            <right>
+                                <answer>Сахара</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">4500</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@180px-ObeyGigant.jpg</atom>
+                                <atom type="say">Кто изображен</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@Andre_the_Giant_bio.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Андре Гигант</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <scenario>
+                                <atom>Самая большая игровая карта, её размер 161,600 кв. км.</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@iliacbay.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Карта Daggerfall</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <scenario>
+                                <atom>Самая высокая гора в Солнечной системе</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@олимп марс.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Гора Олимп</answer>
+                            </right>
+                        </question>
+                        <question price="2800">
+                            <scenario>
+                                <atom>Самая большая артиллерия</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@dora.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>ДораДура</answer>
+                            </right>
+                        </question>
+                        <question price="3200">
+                            <scenario>
+                                <atom>Самый продолжительный фильм длительностью более 12 часов</atom>
+                                <atom type="marker"></atom>
+                                <atom type="image">@800x800.webp</atom>
+                            </scenario>
+                            <right>
+                                <answer>Аут 1</answer>
+                            </right>
+                        </question>
+                        <question price="3600">
+                            <scenario>
+                                <atom>Самый долгий телевизионный сериал (57 лет) и также сериал с самым большим
+                                    количеством серий (более 15 тысяч)
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Путеводный свет</answer>
+                            </right>
+                        </question>
+                        <question price="4000">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1500</param>
+                            </type>
+                            <scenario>
+                                <atom type="video">@undefined_1.mp4</atom>
+                            </scenario>
+                            <right>
+                                <answer>Минус очки</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Дед файлс">
+                    <questions>
+                        <question price="400">
+                            <scenario>
+                                <atom type="image">@Begotten.png</atom>
+                                <atom type="say">Название фильма</atom>
+                            </scenario>
+                            <right>
+                                <answer>Begotten</answer>
+                            </right>
+                        </question>
+                        <question price="800">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">1500</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@oHXfA3f8wYM.jpg</atom>
+                                <atom type="say">Как звали третьего</atom>
+                            </scenario>
+                            <right>
+                                <answer>Владислав Петренко</answer>
+                            </right>
+                        </question>
+                        <question price="1200">
+                            <scenario>
+                                <atom type="image">@дзюндзи ито.png</atom>
+                                <atom type="say">Имя мангаки</atom>
+                            </scenario>
+                            <right>
+                                <answer>Дзюндзи Ито</answer>
+                            </right>
+                        </question>
+                        <question price="1600">
+                            <scenario>
+                                <atom type="image">@5446ca84e4b0b757580c2b7d.jpg</atom>
+                                <atom type="say">Имя существа</atom>
+                            </scenario>
+                            <right>
+                                <answer>Rake</answer>
+                            </right>
+                        </question>
+                        <question price="2000">
+                            <scenario>
+                                <atom type="image">@fa725d3c10bf6584d14659fdbd027929.jpg</atom>
+                                <atom type="say">Солист какой группы</atom>
+                            </scenario>
+                            <right>
+                                <answer>Silencer</answer>
+                            </right>
+                        </question>
+                        <question price="2400">
+                            <type name="cat">
+                                <param name="theme"></param>
+                                <param name="cost">2500</param>
+                            </type>
+                            <scenario>
+                                <atom type="image">@Скриншот 24-03-2021 210425.jpg</atom>
+                            </scenario>
+                            <right>
+                                <answer>Минус очки</answer>
+                            </right>
+                        </question>
+                        <question price="2800">
+                            <scenario>
+                                <atom type="image">@vrix_YSzTqE.jpg</atom>
+                                <atom type="say">Что за событие</atom>
+                            </scenario>
+                            <right>
+                                <answer>Исчезновение и смерть Элизы Лэм</answer>
+                            </right>
+                        </question>
+                        <question price="3200">
+                            <scenario>
+                                <atom type="image">@7a46edfd-3d9f-4539-81b5-56efbe3ac042.jpg</atom>
+                                <atom type="say">Название игры</atom>
+                            </scenario>
+                            <right>
+                                <answer>Carrion</answer>
+                            </right>
+                        </question>
+                        <question price="3600">
+                            <scenario>
+                                <atom type="image">@bruh.gif</atom>
+                                <atom type="say">Название мема</atom>
+                            </scenario>
+                            <right>
+                                <answer>Trollge</answer>
+                            </right>
+                        </question>
+                        <question price="4000">
+                            <scenario>
+                                <atom type="image">@heaven stairway incident, may 2021 nyc.jpg</atom>
+                                <atom type="say">Что за выдуманный инцидент</atom>
+                            </scenario>
+                            <right>
+                                <answer>"Heaven Stairway" incident, New-York May 2021</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+            </themes>
+        </round>
+        <round name="ФИНАЛ" type="final">
+            <themes>
+                <theme name="Государство">
+                    <questions>
+                        <question price="0">
+                            <scenario>
+                                <atom>В средневековой англии сложился документ, который являтся неким прообразом
+                                    конституции
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Великая хартия вольностей</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Игра">
+                    <questions>
+                        <question price="0">
+                            <scenario>
+                                <atom>Идея создания данной игры пришла Стивену Спилбергу после создания фильма "Спасти
+                                    рядового Райана"
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Medal of Honor</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Литература ">
+                    <questions>
+                        <question price="0">
+                            <scenario>
+                                <atom>Cтанислав лем в своём романе описал данный прибор, похожий на наши планшеты и эл.
+                                    книги, так: "Книгами служили кристаллы с навечно вложенным в них смыслом. Читать их
+                                    можно было с помощью ... .
+                                    Своим внешним видом он даже похож на книгу; отличие состояло в том, что ... имел
+                                    между обкладками только одну единственную страницу.
+                                    Прикосновение рукой — и на ней появлялся дальнейший текст"
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Оптон</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Личность">
+                    <questions>
+                        <question price="0">
+                            <scenario>
+                                <atom>Данный русский писатель был уже на расстреле, однако в самый последний момент,
+                                    перед выстрелом, его помиловали
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Фёдор Михайлович Достоевский</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+                <theme name="Фильм">
+                    <questions>
+                        <question price="0">
+                            <scenario>
+                                <atom>На съемках данного фильма главный актер ради одной сцены специально не
+                                    разговаривал пару месяцев, чтобы реалистичнее сыграть персонажа, принявшего обет
+                                    молчания.
+                                </atom>
+                            </scenario>
+                            <right>
+                                <answer>Андрей Рублёв</answer>
+                            </right>
+                        </question>
+                    </questions>
+                </theme>
+            </themes>
+        </round>
+    </rounds>
+</package>
