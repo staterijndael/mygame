@@ -26,6 +26,16 @@ func NewEndpoint(db *sqlx.DB, config *config.Config) *Endpoint {
 	}
 }
 
+func (e *Endpoint) InitRoutes() {
+	http.HandleFunc("/auth/credentials", e.authCredentials)
+	http.HandleFunc("/auth/access", e.authAccessToken)
+	http.HandleFunc("/auth/refresh", e.refreshTokens)
+	http.HandleFunc("/auth/guest", e.authGuest)
+	http.HandleFunc("/get/login", e.getLoginFromAccessToken)
+	http.HandleFunc("/register", e.createUser)
+	http.HandleFunc("/hub", e.serveWs)
+}
+
 func (e *Endpoint) authCredentials(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		responseWriter(http.StatusMethodNotAllowed, map[string]interface{}{
