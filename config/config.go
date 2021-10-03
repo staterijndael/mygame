@@ -3,9 +3,9 @@ package config
 import "time"
 
 type Config struct {
-	App `yaml:"app"`
-	DB  `yaml:"db"`
-	JWT `yaml:"jwt"`
+	App App `yaml:"app"`
+	DB  DB  `yaml:"db"`
+	JWT JWT `yaml:"jwt"`
 }
 
 type App struct {
