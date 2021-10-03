@@ -6,8 +6,11 @@ import (
 	"io/ioutil"
 	"log"
 	"mygame/config"
-	"mygame/internal/parser"
+	"mygame/dependers/database"
+	"mygame/internal/endpoint"
+	"net/http"
 	"path/filepath"
+	"strconv"
 )
 
 const defaultPacksPath = "./packs"
@@ -21,49 +24,37 @@ func init() {
 
 func main() {
 	flag.Parse()
+
 	config, err := parseCfg("./config/config.yaml")
-	if err != nil {
+	if err != nil{
 		panic(err)
 	}
 
 	config.Pack.Path = packsPath
 
-	parser := parser.NewParser(config)
+	connectionAddr := &database.Connection{
+		Host:     config.DB.Host,
+		Port:     config.DB.Port,
+		User:     config.DB.User,
+		Password: config.DB.Password,
+		DBName:   config.DB.DBName,
+		SSLMode:  config.DB.SSLMode,
+	}
 
-	err = parser.ParsingSiGamePack("Samokhodnaya_pizda")
+	connectionAddrStr := database.GenerateAddr(connectionAddr)
+
+	db, err := database.NewDB(connectionAddrStr)
 	if err != nil {
 		log.Fatal(err)
 	}
-	parser.InitMyGame()
-	game := parser.GetMyGame()
-	log.Println(game)
-	//
-	//
 
-	//
-	//connectionAddr := &database.Connection{
-	//	Host:     config.DB.Host,
-	//	Port:     config.DB.Port,
-	//	User:     config.DB.User,
-	//	Password: config.DB.Password,
-	//	DBName:   config.DB.DBName,
-	//	SSLMode:  config.DB.SSLMode,
-	//}
-	//
-	//connectionAddrStr := database.GenerateAddr(connectionAddr)
-	//
-	//db, err := database.NewDB(connectionAddrStr)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//endpoint := endpoint.NewEndpoint(db, config)
-	//endpoint.InitRoutes()
-	//
-	//log.Fatal(http.ListenAndServe(":" + strconv.Itoa(config.App.Port), nil))
+	endpoint := endpoint.NewEndpoint(db, config)
+	endpoint.InitRoutes()
+
+	log.Fatal(http.ListenAndServe(":" + strconv.Itoa(config.App.Port), nil))
 }
 
-func parseCfg(path string) (*config.Config, error) {
+func parseCfg(path string) (*config.Config, error){
 	filename, _ := filepath.Abs(path)
 	yamlFile, err := ioutil.ReadFile(filename)
 
