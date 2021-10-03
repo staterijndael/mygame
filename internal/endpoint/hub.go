@@ -53,8 +53,8 @@ func newHub(ctx context.Context, game *Game) *Hub {
 
 	game.eventChannel = make(chan *ClientEvent)
 	game.players = make(map[*Client]*Player)
-	game.playersUserIDByQueueID = make(map[int]uint64)
-	game.playersQueueIDByUserID = make(map[uint64]int)
+	game.playersTokenByQueueID = make(map[int]string)
+	game.playersQueueIDByToken = make(map[string]int)
 
 	game.hub = hub
 

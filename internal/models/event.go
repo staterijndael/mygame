@@ -8,5 +8,5 @@ type CreateGame struct {
 }
 
 type JoinGame struct {
-	HubID int
+	HubID int `json:"hub_id"`
 }

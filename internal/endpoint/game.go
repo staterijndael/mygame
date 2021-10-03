@@ -23,8 +23,8 @@ const (
 
 var roleByEvent = map[EventType][]Role{
 	StartGame:     {Leader},
-	Join:          {User, Leader},
-	Disconnect:    {User, Leader},
+	Join:          {},
+	Disconnect:    {},
 	GetQuest:      {User},
 	GiveAnswer:    {User},
 	DeclineAnswer: {Leader},
@@ -88,7 +88,7 @@ type JoinServerEvent struct {
 }
 
 type DisconnectServerEvent struct {
-	UserID uint64
+	QueueID int
 }
 
 type GreetingsServerEvent struct {
@@ -211,7 +211,7 @@ func (game *Game) runGame(ctx context.Context) {
 				}
 
 				if client != nil {
-					client.conn.WriteMessage(1, []byte("token parse error "+err.Error()))
+					client.send <- []byte("token parse error " + err.Error())
 					client.conn.Close()
 
 					game.hub.unregister <- client
@@ -229,7 +229,7 @@ func (game *Game) runGame(ctx context.Context) {
 				}
 
 				if client != nil {
-					client.conn.WriteMessage(1, []byte("token expired "+err.Error()))
+					client.send <- []byte("token expired " + err.Error())
 					client.conn.Close()
 
 					game.hub.unregister <- client
@@ -239,17 +239,19 @@ func (game *Game) runGame(ctx context.Context) {
 			}
 
 			accessedRoles := roleByEvent[event.Type]
-			var accessed bool
-			for _, role := range accessedRoles {
-				if role == game.hub.clients[jwtKey].role {
-					accessed = true
+			if len(accessedRoles) != 0 {
+				var accessed bool
+				for _, role := range accessedRoles {
+					if role == game.hub.clients[event.Token].role {
+						accessed = true
+					}
 				}
-			}
 
-			if !accessed {
-				game.hub.clients[jwtKey].conn.WriteMessage(1, []byte("permission denied"))
+				if !accessed {
+					game.hub.clients[event.Token].send <- []byte("permission denied")
 
-				continue
+					continue
+				}
 			}
 
 			var newDuration time.Duration
@@ -257,7 +259,7 @@ func (game *Game) runGame(ctx context.Context) {
 			switch event.Type {
 			case StartGame:
 				if len(game.players) == 0 {
-					game.hub.clients[jwtKey].conn.WriteMessage(1, []byte("cannot start game: no players"))
+					game.hub.clients[event.Token].send <- []byte("cannot start game: no players")
 
 					continue
 				}
@@ -265,6 +267,14 @@ func (game *Game) runGame(ctx context.Context) {
 				game.currentStep = Grettings
 
 				newDuration = 10 * time.Second
+
+				greetingsServer := GreetingsServerEvent{
+					Name:   game.Name,
+					Author: game.Author,
+					Date:   game.Date,
+				}
+
+				game.sendServerEvent(GreetingsServer, greetingsServer, time.Now().In(time.UTC).Add(newDuration).Unix())
 			case Join:
 				// todo: getting user image
 				joinServer := JoinServerEvent{
@@ -272,32 +282,34 @@ func (game *Game) runGame(ctx context.Context) {
 					Nickname: token.Login,
 				}
 
-				if game.hub.clients[jwtKey].role == Leader {
+				if game.hub.clients[event.Token].role == Leader {
 					game.sendServerEvent(JoinServer, joinServer, 0)
 
 					continue
 				}
 
-				game.players[game.hub.clients[jwtKey]] = &Player{
-					client: game.hub.clients[jwtKey],
+				game.players[game.hub.clients[event.Token]] = &Player{
+					client: game.hub.clients[event.Token],
 					score:  0,
 				}
 
 				queueID := len(game.playersQueueIDByToken) + 1
 
-				game.playersQueueIDByToken[jwtKey] = queueID
-				game.playersTokenByQueueID[queueID] = jwtKey
+				game.playersQueueIDByToken[event.Token] = queueID
+				game.playersTokenByQueueID[queueID] = event.Token
 
 				joinServer.QueueID = queueID
 
 				game.sendServerEvent(JoinServer, joinServer, 0)
 			case Disconnect:
-				if _, ok := game.players[game.hub.clients[jwtKey]]; ok {
-					delete(game.players, game.hub.clients[jwtKey])
+				for client := range game.players {
+					if client.token == event.Token {
+						delete(game.players, client)
+					}
 				}
 
 				disconnectServer := DisconnectServerEvent{
-					UserID: token.ID,
+					QueueID: game.playersQueueIDByToken[event.Token],
 				}
 
 				game.sendServerEvent(DisconnectServer, disconnectServer, 0)
@@ -324,15 +336,15 @@ func (game *Game) runGame(ctx context.Context) {
 				game.sendServerEvent(ChooseQuestServer, chooseQuest, time.Now().In(time.UTC).Add(newDuration).Unix())
 			case GetQuest:
 				if game.currentStep == Getting {
-					player := game.players[game.hub.clients[jwtKey]]
+					player := game.players[game.hub.clients[event.Token]]
 					if player.client.role == User {
 						game.currentStep = Answering
-						game.currentPlayerID = game.playersQueueIDByToken[jwtKey]
+						game.currentPlayerID = game.playersQueueIDByToken[event.Token]
 
 						newDuration = 20 * time.Second
 
 						takenQuest := TakenQuestServerEvent{
-							QueueID: game.playersQueueIDByToken[jwtKey],
+							QueueID: game.playersQueueIDByToken[event.Token],
 						}
 
 						game.sendServerEvent(TakenQuestServer, takenQuest, time.Now().In(time.UTC).Add(newDuration).Unix())
@@ -384,7 +396,7 @@ func (game *Game) runGame(ctx context.Context) {
 
 				scoreChanged := ScoreChangedServerEvent{
 					QueueID: game.currentPlayerID,
-					Score:   game.players[game.hub.clients[jwtKey]].score,
+					Score:   game.players[game.hub.clients[event.Token]].score,
 				}
 
 				game.sendServerEvent(AnswerAcceptedServer, nil, time.Now().In(time.UTC).Add(newDuration).Unix())
@@ -427,7 +439,7 @@ func (game *Game) runGame(ctx context.Context) {
 				}
 
 				curQuest := game.Rounds[game.currentRound-1].Themes[game.currentTheme-1].Quests[game.currentQuestion-1]
-				game.players[game.hub.clients[jwtKey]].score -= curQuest.Price
+				game.players[game.hub.clients[event.Token]].score -= curQuest.Price
 
 				if len(game.players) > game.currentPlayerID {
 					game.currentPlayerID++
@@ -437,7 +449,7 @@ func (game *Game) runGame(ctx context.Context) {
 
 				scoreChanged := ScoreChangedServerEvent{
 					QueueID: game.currentPlayerID,
-					Score:   game.players[game.hub.clients[jwtKey]].score,
+					Score:   game.players[game.hub.clients[event.Token]].score,
 				}
 
 				game.sendServerEvent(ScoreChangedServer, scoreChanged, time.Now().In(time.UTC).Add(newDuration).Unix())

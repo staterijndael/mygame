@@ -17,7 +17,7 @@ const (
 	writeWait = 10 * time.Second
 
 	// Time allowed to read the next pong message from the peer.
-	pongWait = 60 * time.Second
+	pongWait = 120 * time.Second
 
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
@@ -65,6 +65,10 @@ func (c *Client) readPump() {
 		c.hub.unregister <- c
 		c.conn.Close()
 	}()
+	c.conn.SetReadLimit(maxMessageSize)
+	c.conn.SetReadDeadline(time.Now().Add(pongWait))
+	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+
 	for {
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {
@@ -179,17 +183,21 @@ func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	conn.SetReadLimit(maxMessageSize)
-	conn.SetReadDeadline(time.Now().Add(pongWait))
-	conn.SetPongHandler(func(string) error { conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 
 	var createGame models.CreateGame
 	var joinGame models.JoinGame
 
 	_, msg, err := conn.ReadMessage()
 
-	errCreateGame, errJoinGame := json.Unmarshal(msg, &createGame), json.Unmarshal(msg, &joinGame)
-	if errCreateGame != nil && errJoinGame != nil {
+	type ConnectType struct {
+		Type string
+		Data json.RawMessage
+	}
+
+	var connectType ConnectType
+
+	err = json.Unmarshal(msg, &connectType)
+	if err != nil {
 		conn.WriteMessage(1, []byte("invalid event"))
 		conn.Close()
 
@@ -198,7 +206,32 @@ func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 
 	var hub *Hub
 	var role Role
-	if errCreateGame == nil {
+	if connectType.Type == "create" {
+		err = json.Unmarshal(connectType.Data, &createGame)
+		if err != nil {
+			conn.WriteMessage(1, []byte("invalid event data"))
+			conn.Close()
+
+			return
+		}
+
+		if createGame.Name == "" {
+			conn.WriteMessage(1, []byte("invalid game name"))
+			conn.Close()
+
+			return
+		} else if createGame.Password == "" {
+			conn.WriteMessage(1, []byte("invalid password"))
+			conn.Close()
+
+			return
+		} else if createGame.MaxPlayers < 1 || createGame.MaxPlayers > 8 {
+			conn.WriteMessage(1, []byte("incorrect players count"))
+			conn.Close()
+
+			return
+		}
+
 		game := &Game{
 			Name:   "someRandomName",
 			Author: "someRandomAuthor",
@@ -242,7 +275,15 @@ func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 		hub.opts.MaxPlayers = createGame.MaxPlayers
 		// todo: parsing pack
 		role = Leader
-	} else {
+	} else if connectType.Type == "join" {
+		err = json.Unmarshal(connectType.Data, &joinGame)
+		if err != nil {
+			conn.WriteMessage(1, []byte("invalid event data"))
+			conn.Close()
+
+			return
+		}
+
 		foundHub, ok := hubs[joinGame.HubID]
 		if !ok {
 			conn.WriteMessage(1, []byte("incorrect hub id"))
@@ -253,6 +294,11 @@ func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 
 		hub = foundHub
 		role = User
+	} else {
+		conn.WriteMessage(1, []byte("incorrect connect type"))
+		conn.Close()
+
+		return
 	}
 
 	if hub.opts.MaxPlayers == len(hub.clients)-1 {
