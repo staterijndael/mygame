@@ -1,6 +1,8 @@
 package endpoint
 
-import "context"
+import (
+	"context"
+)
 
 var hubs = make(map[int]*Hub)
 

@@ -11,6 +11,7 @@ import (
 type EventType string
 
 const (
+	StartGame     EventType = "start_game"
 	Join          EventType = "join"
 	Disconnect    EventType = "disconnect"
 	GetQuest      EventType = "get_quest"
@@ -21,6 +22,7 @@ const (
 )
 
 var roleByEvent = map[EventType][]Role{
+	StartGame:     {Leader},
 	Join:          {User, Leader},
 	Disconnect:    {User, Leader},
 	GetQuest:      {User},
@@ -192,7 +194,7 @@ func (game *Game) runGame(ctx context.Context) {
 	jwtKey := ctx.Value("JWT_KEY").(string)
 
 	game.currentStep = WaitingStart
-	ticker := time.NewTicker(5 * time.Minute)
+	ticker := time.NewTicker(20 * time.Minute)
 
 	defer ticker.Stop()
 
@@ -253,6 +255,10 @@ func (game *Game) runGame(ctx context.Context) {
 			var newDuration time.Duration
 
 			switch event.Type {
+			case StartGame:
+				game.currentStep = Grettings
+
+				newDuration = 10 * time.Second
 			case Join:
 				var firstPlayer *Player
 				for _, pl := range game.players {
@@ -440,6 +446,8 @@ func (game *Game) runGame(ctx context.Context) {
 			switch game.currentStep {
 			case WaitingStart:
 				game.hub.close <- struct{}{}
+
+				break
 			case Grettings:
 				if len(game.Rounds) > game.currentRound-1 {
 					game.currentStep = ReadingRound
@@ -572,6 +580,10 @@ func (game *Game) runGame(ctx context.Context) {
 				}
 
 				game.sendServerEvent(ScoreChangedServer, scoreChanged, time.Now().In(time.UTC).Add(newDuration).Unix())
+			case Final:
+				game.hub.close <- struct{}{}
+
+				break
 			}
 
 			if newDuration != 0 {
