@@ -169,19 +169,21 @@ type Theme struct {
 	Quests []*Question
 }
 
-type ObjectType int
+type ObjectType string
 
 const (
-	Text ObjectType = iota
-	Image
-	MP3
-	Video
+	Text   ObjectType = "text"
+	Image  ObjectType = "image"
+	Audio  ObjectType = "voice"
+	Video  ObjectType = "video"
+	Answer ObjectType = "answer"
 )
 
 type Question struct {
-	Id      int
-	Price   int
-	Objects []*Object
+	Id     int
+	Price  int
+	Scene  []*Object
+	Answer []*Object
 }
 
 type Object struct {
@@ -332,6 +334,8 @@ func (game *Game) runGame(ctx context.Context) {
 					ThemeID:    clientEvent.ThemeID,
 					QuestionID: clientEvent.QuestionID,
 				}
+
+				// todo: send correct answer to leader
 
 				game.sendServerEvent(ChooseQuestServer, chooseQuest, time.Now().In(time.UTC).Add(newDuration).Unix())
 			case GetQuest:

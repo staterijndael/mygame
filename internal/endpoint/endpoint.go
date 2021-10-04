@@ -1,17 +1,35 @@
 package endpoint
 
 import (
+	"bytes"
+	"crypto/sha256"
 	"encoding/json"
 	"errors"
 	"github.com/jmoiron/sqlx"
+	"io"
 	"io/ioutil"
 	"mygame/config"
 	"mygame/internal/models"
 	"mygame/internal/repository"
+	"mygame/internal/singleton"
 	"mygame/tools/helpers"
 	"mygame/tools/jwt"
 	"net/http"
+	"os"
 	"time"
+)
+
+const (
+	MB = 1 << 20
+
+	MaxPackSize = MB * 150
+
+	SiGame = "si_game_pack"
+	MyGame = "my_game_pack"
+
+	SiGameArchivesPath = "/siq_archives"
+
+	ToArchiveType = ".zip"
 )
 
 type Endpoint struct {
@@ -33,6 +51,63 @@ func (e *Endpoint) InitRoutes() {
 	http.HandleFunc("/get/login", e.getLoginFromAccessToken)
 	http.HandleFunc("/register", e.createUser)
 	http.HandleFunc("/hub", e.serveWs)
+	http.HandleFunc("/pack/upload", e.saveSiGamePack)
+
+}
+
+func (e *Endpoint) saveSiGamePack(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		responseWriter(http.StatusMethodNotAllowed, map[string]interface{}{
+			"error": "method not allowed",
+		}, w)
+
+		return
+	}
+
+	multipartFile, fileHeader, err := r.FormFile(SiGame)
+	if err != nil {
+		responseWriterError(err, w, http.StatusInternalServerError)
+
+		return
+	}
+
+	_, err = jwt.ParseJWT([]byte(e.configuration.JWT.SecretKey), r.Header.Get("Authorization"))
+	if err != nil {
+		responseWriterError(err, w, http.StatusBadRequest)
+
+		return
+	}
+
+	if fileHeader.Size > MaxPackSize {
+		responseWriterError(errors.New("максимальный размер игры 150 MB"), w, http.StatusBadRequest)
+
+		return
+	}
+
+	buf := bytes.NewBuffer(nil)
+	if _, err := io.Copy(buf, multipartFile); err != nil {
+		return
+	}
+
+	hash := sha256.Sum256(buf.Bytes())
+
+	ok := singleton.IsExistPack(hash)
+	if !ok {
+		singleton.AddPack(hash, fileHeader.Filename)
+
+		file, err := os.Create(e.configuration.Pack.Path + SiGameArchivesPath + "/" + fileHeader.Filename + ToArchiveType)
+		if err != nil {
+			responseWriterError(err, w, http.StatusInternalServerError)
+
+			return
+		}
+
+		io.Copy(file, buf)
+	}
+
+	responseWriter(http.StatusOK, map[string]interface{}{}, w)
+
+	return
 }
 
 func (e *Endpoint) authCredentials(w http.ResponseWriter, r *http.Request) {

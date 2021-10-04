@@ -8,6 +8,7 @@ import (
 	"mygame/config"
 	"mygame/dependers/database"
 	"mygame/internal/endpoint"
+	"mygame/internal/singleton"
 	"net/http"
 	"path/filepath"
 	"strconv"
@@ -26,7 +27,7 @@ func main() {
 	flag.Parse()
 
 	config, err := parseCfg("./config/config.yaml")
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 
@@ -48,13 +49,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+	singleton.InitSingleton()
+
 	endpoint := endpoint.NewEndpoint(db, config)
 	endpoint.InitRoutes()
 
-	log.Fatal(http.ListenAndServe(":" + strconv.Itoa(config.App.Port), nil))
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(config.App.Port), nil))
 }
 
-func parseCfg(path string) (*config.Config, error){
+func parseCfg(path string) (*config.Config, error) {
 	filename, _ := filepath.Abs(path)
 	yamlFile, err := ioutil.ReadFile(filename)
 

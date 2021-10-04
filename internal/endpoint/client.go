@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"mygame/internal/models"
+	"mygame/internal/singleton"
 	"mygame/tools/jwt"
 	"net/http"
 	"time"
@@ -154,6 +155,7 @@ func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	ctx = context.WithValue(ctx, "JWT_KEY", e.configuration.JWT.SecretKey)
+	ctx = context.WithValue(ctx, "PACKS_PATH", e.configuration.Pack.Path)
 
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -215,6 +217,14 @@ func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		packName := singleton.GetPack(createGame.PackUID)
+		if packName == "" {
+			conn.WriteMessage(1, []byte("invalid game pack"))
+			conn.Close()
+
+			return
+		}
+
 		if createGame.Name == "" {
 			conn.WriteMessage(1, []byte("invalid game name"))
 			conn.Close()
@@ -232,41 +242,21 @@ func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		game := &Game{
-			Name:   "someRandomName",
-			Author: "someRandomAuthor",
-			Date:   "25.02.2021",
-			Rounds: []*Round{
-				{
-					Id:   1,
-					Name: "firstRound",
-					Themes: []*Theme{
-						{
-							Id:   1,
-							Name: "firstTheme",
-							Quests: []*Question{
-								{
-									Id:    1,
-									Price: 500,
-									Objects: []*Object{
-										{
-											Id:   1,
-											Type: Text,
-											Src:  "someText",
-										},
-										{
-											Id:   2,
-											Type: Image,
-											Src:  "./image.png",
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
+		parser := NewParser(ctx.Value("PACKS_PATH").(string))
+
+		err = parser.ParsingSiGamePack(packName)
+		if err != nil {
+			conn.WriteMessage(1, []byte("invalid parsing si game pack"))
+			conn.Close()
 		}
+
+		err = parser.InitMyGame()
+		if err != nil {
+			conn.WriteMessage(1, []byte("invalid init si game pack"))
+			conn.Close()
+		}
+
+		game := parser.GetMyGame()
 
 		hub = registerHub(ctx, game)
 

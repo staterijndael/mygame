@@ -1,10 +1,8 @@
-package parser
+package endpoint
 
 import (
 	"encoding/xml"
 	"io/ioutil"
-	"mygame/config"
-	"mygame/internal/endpoint"
 	"mygame/internal/models"
 	"os"
 	"strconv"
@@ -23,28 +21,28 @@ const (
 
 type Parser struct {
 	IParser
-	config *config.Config
-	myGame *endpoint.Game
-	siGame *models.Package
+	packsPath string
+	myGame    *Game
+	siGame    *models.Package
 }
 
 type IParser interface {
 	ParsingSiGamePack(packName string) error
-	GetMyGame() *endpoint.Game
+	GetMyGame() *Game
 	GetSiGame() *models.Package
 	InitMyGame() error
 }
 
-func NewParser(config *config.Config) IParser {
+func NewParser(packsPath string) IParser {
 	return &Parser{
-		config: config,
-		myGame: new(endpoint.Game),
-		siGame: new(models.Package),
+		packsPath: packsPath,
+		myGame:    new(Game),
+		siGame:    new(models.Package),
 	}
 }
 
 func (p *Parser) ParsingSiGamePack(packName string) error {
-	packContent, err := os.Open(p.config.Pack.Path + "/" + packName + "/" + defaultContentName)
+	packContent, err := os.Open(p.packsPath + "/" + packName + "/" + defaultContentName)
 	if err != nil {
 		return err
 	}
@@ -65,34 +63,34 @@ func (p *Parser) ParsingSiGamePack(packName string) error {
 }
 
 func (p *Parser) InitMyGame() error {
-	p.myGame = &endpoint.Game{
+	p.myGame = &Game{
 		Name:   p.siGame.Name,
 		Author: p.siGame.Info.Authors.Author,
 		Date:   p.siGame.Date,
 	}
 
 	for i, round := range p.siGame.Rounds.Round {
-		var themes []*endpoint.Theme
+		var themes []*Theme
 
 		for j, theme := range round.Themes.Theme {
-			var quests []*endpoint.Question
+			var quests []*Question
 
 			for k, question := range theme.Questions.Question {
-				var answer []*endpoint.Object
+				var answer []*Object
 
-				answer = append(answer, &endpoint.Object{
+				answer = append(answer, &Object{
 					Id:   1,
-					Type: endpoint.Answer,
+					Type: Answer,
 					Src:  strings.Join(question.Right.Answer, " "),
 				})
 
-				var scene []*endpoint.Object
+				var scene []*Object
 
 				for z, atom := range question.Scenario.Atom {
-					scene = append(scene, &endpoint.Object{
+					scene = append(scene, &Object{
 						Id:   z + 1,
 						Src:  atom.Text,
-						Type: endpoint.ObjectType(atom.Type),
+						Type: ObjectType(atom.Type),
 					})
 				}
 
@@ -101,7 +99,7 @@ func (p *Parser) InitMyGame() error {
 					return err
 				}
 
-				quests = append(quests, &endpoint.Question{
+				quests = append(quests, &Question{
 					Id:     k + 1,
 					Price:  price,
 					Scene:  scene,
@@ -109,14 +107,14 @@ func (p *Parser) InitMyGame() error {
 				})
 			}
 
-			themes = append(themes, &endpoint.Theme{
+			themes = append(themes, &Theme{
 				Id:     j + 1,
 				Name:   theme.Name,
 				Quests: quests,
 			})
 		}
 
-		p.myGame.Rounds = append(p.myGame.Rounds, &endpoint.Round{
+		p.myGame.Rounds = append(p.myGame.Rounds, &Round{
 			Id:     i + 1,
 			Name:   round.Name,
 			Themes: themes,
@@ -126,7 +124,7 @@ func (p *Parser) InitMyGame() error {
 	return nil
 }
 
-func (p *Parser) GetMyGame() *endpoint.Game {
+func (p *Parser) GetMyGame() *Game {
 	return p.myGame
 }
 
