@@ -10,7 +10,8 @@ type Config struct {
 }
 
 type App struct {
-	Port int `yaml:"port"`
+	Port     int    `yaml:"port"`
+	LogLevel string `yaml:"log_level"`
 }
 
 type DB struct {

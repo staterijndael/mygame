@@ -3,6 +3,7 @@ package endpoint
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
 	"log"
 	"mygame/internal/models"
 	"mygame/internal/singleton"
@@ -152,6 +153,8 @@ func (c *Client) writePump() {
 
 // serveWs handles websocket requests from the peer.
 func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
+	e.logger = e.logger.With(zap.String("endpoint", EndpointType(r.URL.RequestURI()).ToString()))
+
 	ctx := context.Background()
 
 	ctx = context.WithValue(ctx, "JWT_KEY", e.configuration.JWT.SecretKey)
@@ -159,7 +162,11 @@ func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println(err)
+		e.logger.Error(
+			"websocket connection error",
+			zap.Error(err),
+		)
+
 		return
 	}
 
