@@ -153,21 +153,21 @@ func (c *Client) writePump() {
 
 // serveWs handles websocket requests from the peer.
 func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
-	//example ho to use logger
+	//example how to use logger
 	ctx := e.CreateContext(r)
 
-	// example ho to get user request token
+	// example how to get user request token
 	//requestToken := ctx.Value(RequestTokenContext).(string)
 
 	ctx = context.WithValue(ctx, "JWT_KEY", e.configuration.JWT.SecretKey)
 	ctx = context.WithValue(ctx, "PACKS_PATH", e.configuration.Pack.Path)
 
-	///example ho to use logger
+	///example how to use logger
 	logger := ctx.Value(LoggerContext).(*zap.Logger)
 
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		//example ho to use logger
+		//example how to use logger
 		logger.Error(
 			"websocket connection error",
 			zap.Error(err),
