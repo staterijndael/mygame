@@ -11,6 +11,7 @@ import (
 	"io"
 	"io/ioutil"
 	"mygame/config"
+	"mygame/dependers/monitoring"
 	"mygame/internal/models"
 	"mygame/internal/repository"
 	"mygame/internal/singleton"
@@ -63,13 +64,15 @@ type Endpoint struct {
 	repository    *repository.Repository
 	configuration *config.Config
 	logger        *zap.Logger
+	monitoring    monitoring.IMonitoring
 }
 
-func NewEndpoint(db *sqlx.DB, config *config.Config, logger *zap.Logger) *Endpoint {
+func NewEndpoint(db *sqlx.DB, config *config.Config, logger *zap.Logger, monitoring monitoring.IMonitoring) *Endpoint {
 	return &Endpoint{
 		repository:    repository.NewRepository(db),
 		configuration: config,
 		logger:        logger,
+		monitoring:    monitoring,
 	}
 }
 
