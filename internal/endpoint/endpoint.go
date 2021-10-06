@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 	"io"
@@ -89,15 +90,54 @@ func (e *Endpoint) InitRoutes() {
 func (e *Endpoint) CreateContext(r *http.Request) context.Context {
 	requestToken := r.Header.Get(RequestTokenHeader)
 
+	endpointName := EndpointType(r.URL.RequestURI()).ToString()
+
 	logger := e.logger.With(
-		zap.String("endpoint", EndpointType(r.URL.RequestURI()).ToString()),
+		zap.String("endpoint", endpointName),
 		zap.String("request_token", requestToken),
 	)
 
 	ctx := context.WithValue(r.Context(), RequestTokenContext, requestToken)
 	ctx = context.WithValue(r.Context(), LoggerContext, logger)
 
+	executionTime, err := e.pushMetrics(true, endpointName, func() error {
+		return errors.New("monitoring push metrics failed")
+	})
+	if err != nil {
+		logger.Error(
+			"monitoring endpoint error",
+			zap.Error(err),
+		)
+	}
+
+	logger.Debug(
+		"monitoring execution time",
+		zap.Float64("execution_time", executionTime),
+	)
+
 	return ctx
+}
+
+func (e *Endpoint) pushMetrics(isServer bool, endpointName string, f func() error) (executionTime float64, err error) {
+	executionTime, err = e.monitoring.ExecutionTime(&monitoring.Metric{
+		Namespace: "http",
+		Name:      "execution_time",
+		ConstLabels: map[string]string{
+			"endpoint_name": endpointName,
+			"is_server":     fmt.Sprintf("%t", isServer),
+		},
+	}, f)
+
+	if err != nil {
+		_ = e.monitoring.Inc(
+			&monitoring.Metric{
+				Namespace: "http",
+				Name:      endpointName,
+			},
+		)
+	}
+
+	return
 }
 
 func (e *Endpoint) saveSiGamePack(w http.ResponseWriter, r *http.Request) {
