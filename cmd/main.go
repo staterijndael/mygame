@@ -9,6 +9,7 @@ import (
 	"mygame/config"
 	"mygame/dependers/database"
 	"mygame/dependers/logger"
+	"mygame/dependers/monitoring"
 	"mygame/internal/endpoint"
 	"mygame/internal/singleton"
 	"mygame/tools/helpers"
@@ -61,7 +62,9 @@ func main() {
 
 	singleton.InitSingleton()
 
-	endpoint := endpoint.NewEndpoint(db, config, logger)
+	monitoring := monitoring.NewPrometheusMonitoring(config.Monitoring)
+
+	endpoint := endpoint.NewEndpoint(db, config, logger, monitoring)
 	endpoint.InitRoutes()
 
 	logger.Info(

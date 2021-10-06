@@ -14,6 +14,9 @@ jwt:
   secret_key:      "1234"
   expiration_time: "24h"
 
-prometheus:
-  host: "localhost:9090"
-  job_name: ""
+monitoring:
+  pushURL: "127.0.0.1:9091"
+  username: prometheus
+  password: prometheus
+  jobName: mygame
+  instanceName: metrics
