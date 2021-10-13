@@ -6,11 +6,12 @@ import (
 )
 
 type Config struct {
-	App        App                `yaml:"app"`
-	DB         DB                 `yaml:"db"`
-	JWT        JWT                `yaml:"jwt"`
-	Monitoring *monitoring.Config `yaml:"monitoring"`
-	Pack       Pack
+	App           App `yaml:"app"`
+	DB            DB  `yaml:"db"`
+	JWT           JWT `yaml:"jwt"`
+	Pack          Pack
+	PackTemporary PackTemporary
+	Monitoring    *monitoring.Config `yaml:"monitoring"`
 }
 
 type App struct {
@@ -33,5 +34,9 @@ type JWT struct {
 }
 
 type Pack struct {
+	Path string
+}
+
+type PackTemporary struct {
 	Path string
 }

@@ -2,6 +2,7 @@ package endpoint
 
 import (
 	"context"
+	"mygame/config"
 )
 
 var hubs = make(map[int]*Hub)
@@ -33,8 +34,8 @@ type Options struct {
 	MaxPlayers int
 }
 
-func registerHub(ctx context.Context, game *Game) *Hub {
-	hub := newHub(ctx, game)
+func registerHub(ctx context.Context, game *Game, configuration *config.Config) *Hub {
+	hub := newHub(ctx, game, configuration)
 	go hub.run()
 
 	hubs[len(hubs)+1] = hub
@@ -42,7 +43,7 @@ func registerHub(ctx context.Context, game *Game) *Hub {
 	return hub
 }
 
-func newHub(ctx context.Context, game *Game) *Hub {
+func newHub(ctx context.Context, game *Game, configuration *config.Config) *Hub {
 	hub := &Hub{
 		broadcast:  make(chan []byte),
 		register:   make(chan *Client),
@@ -51,10 +52,13 @@ func newHub(ctx context.Context, game *Game) *Hub {
 		game:       game,
 	}
 
+	game.currentPlayerID = 1
 	game.eventChannel = make(chan *ClientEvent)
 	game.players = make(map[*Client]*Player)
 	game.playersTokenByQueueID = make(map[int]string)
 	game.playersQueueIDByToken = make(map[string]int)
+
+	game.configuration = configuration
 
 	game.hub = hub
 

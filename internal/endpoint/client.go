@@ -7,6 +7,7 @@ import (
 	"log"
 	"mygame/internal/models"
 	"mygame/internal/singleton"
+	"mygame/tools/helpers"
 	"mygame/tools/jwt"
 	"net/http"
 	"time"
@@ -230,14 +231,6 @@ func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		packName := singleton.GetPack(createGame.PackUID)
-		if packName == "" {
-			conn.WriteMessage(1, []byte("invalid game pack"))
-			conn.Close()
-
-			return
-		}
-
 		if createGame.Name == "" {
 			conn.WriteMessage(1, []byte("invalid game name"))
 			conn.Close()
@@ -257,7 +250,7 @@ func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 
 		parser := NewParser(ctx.Value("PACKS_PATH").(string))
 
-		err = parser.ParsingSiGamePack(packName)
+		err = parser.ParsingSiGamePack(string(createGame.PackUID[:]) + ".zip")
 		if err != nil {
 			conn.WriteMessage(1, []byte("invalid parsing si game pack"))
 			conn.Close()
@@ -271,7 +264,15 @@ func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 
 		game := parser.GetMyGame()
 
-		hub = registerHub(ctx, game)
+		err := helpers.Unzip(e.configuration.Pack.Path+"/"+string(createGame.PackUID[:])+".zip", e.configuration.PackTemporary.Path+"/"+string(createGame.PackUID[:]))
+		if err != nil {
+			conn.WriteMessage(1, []byte("internal error: cannot unzip pack archive"))
+			conn.Close()
+		}
+
+		singleton.IncTemporaryPack(createGame.PackUID)
+
+		hub = registerHub(ctx, game, e.configuration)
 
 		hub.opts.Name = createGame.Name
 		hub.opts.Password = createGame.Password
