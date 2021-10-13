@@ -4,7 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"mygame/config"
+	"mygame/internal/singleton"
 	"mygame/tools/jwt"
+	"os"
 	"time"
 )
 
@@ -132,6 +135,8 @@ type FinalServerEvent struct {
 }
 
 type Game struct {
+	UID [32]byte
+
 	Name   string
 	Author string
 	Date   string
@@ -150,6 +155,8 @@ type Game struct {
 	currentRound    int
 	currentTheme    int
 	currentQuestion int
+
+	configuration *config.Config
 }
 
 type Player struct {
@@ -193,8 +200,6 @@ type Object struct {
 }
 
 func (game *Game) runGame(ctx context.Context) {
-	jwtKey := ctx.Value("JWT_KEY").(string)
-
 	game.currentStep = WaitingStart
 	ticker := time.NewTicker(20 * time.Minute)
 
@@ -203,16 +208,10 @@ func (game *Game) runGame(ctx context.Context) {
 	for {
 		select {
 		case event := <-game.eventChannel:
-			token, err := jwt.ParseJWT([]byte(jwtKey), event.Token)
+			token, err := jwt.ParseJWT([]byte(game.configuration.JWT.SecretKey), event.Token)
 			if err != nil {
-				var client *Client
-				for _, cl := range game.hub.clients {
-					if cl.token == event.Token {
-						client = cl
-					}
-				}
-
-				if client != nil {
+				client, ok := game.hub.clients[event.Token]
+				if !ok {
 					client.send <- []byte("token parse error " + err.Error())
 					client.conn.Close()
 
@@ -223,14 +222,8 @@ func (game *Game) runGame(ctx context.Context) {
 			}
 
 			if token.ExpiresAt < time.Now().Unix() {
-				var client *Client
-				for _, cl := range game.hub.clients {
-					if cl.token == event.Token {
-						client = cl
-					}
-				}
-
-				if client != nil {
+				client, ok := game.hub.clients[event.Token]
+				if !ok {
 					client.send <- []byte("token expired " + err.Error())
 					client.conn.Close()
 
@@ -276,7 +269,7 @@ func (game *Game) runGame(ctx context.Context) {
 					Date:   game.Date,
 				}
 
-				game.sendServerEvent(GreetingsServer, greetingsServer, time.Now().In(time.UTC).Add(newDuration).Unix())
+				game.broadcastServerEvent(GreetingsServer, greetingsServer, time.Now().In(time.UTC).Add(newDuration).Unix())
 			case Join:
 				// todo: getting user image
 				joinServer := JoinServerEvent{
@@ -285,7 +278,7 @@ func (game *Game) runGame(ctx context.Context) {
 				}
 
 				if game.hub.clients[event.Token].role == Leader {
-					game.sendServerEvent(JoinServer, joinServer, 0)
+					game.broadcastServerEvent(JoinServer, joinServer, 0)
 
 					continue
 				}
@@ -302,7 +295,7 @@ func (game *Game) runGame(ctx context.Context) {
 
 				joinServer.QueueID = queueID
 
-				game.sendServerEvent(JoinServer, joinServer, 0)
+				game.broadcastServerEvent(JoinServer, joinServer, 0)
 			case Disconnect:
 				for client := range game.players {
 					if client.token == event.Token {
@@ -314,7 +307,7 @@ func (game *Game) runGame(ctx context.Context) {
 					QueueID: game.playersQueueIDByToken[event.Token],
 				}
 
-				game.sendServerEvent(DisconnectServer, disconnectServer, 0)
+				game.broadcastServerEvent(DisconnectServer, disconnectServer, 0)
 			case ChooseQuest:
 				var clientEvent ChooseQuestClientEvent
 
@@ -337,7 +330,7 @@ func (game *Game) runGame(ctx context.Context) {
 
 				// todo: send correct answer to leader
 
-				game.sendServerEvent(ChooseQuestServer, chooseQuest, time.Now().In(time.UTC).Add(newDuration).Unix())
+				game.broadcastServerEvent(ChooseQuestServer, chooseQuest, time.Now().In(time.UTC).Add(newDuration).Unix())
 			case GetQuest:
 				if game.currentStep == Getting {
 					player := game.players[game.hub.clients[event.Token]]
@@ -351,7 +344,7 @@ func (game *Game) runGame(ctx context.Context) {
 							QueueID: game.playersQueueIDByToken[event.Token],
 						}
 
-						game.sendServerEvent(TakenQuestServer, takenQuest, time.Now().In(time.UTC).Add(newDuration).Unix())
+						game.broadcastServerEvent(TakenQuestServer, takenQuest, time.Now().In(time.UTC).Add(newDuration).Unix())
 					}
 				}
 			case AcceptAnswer:
@@ -368,7 +361,7 @@ func (game *Game) runGame(ctx context.Context) {
 						game.currentRound++
 						game.currentStep = ChooseQuestion
 
-						newDuration = 10 * time.Second
+						newDuration = 30 * time.Second
 					} else {
 						game.currentStep = Final
 						newDuration = 5 * time.Minute
@@ -382,11 +375,11 @@ func (game *Game) runGame(ctx context.Context) {
 							}
 						}
 
-						game.sendServerEvent(FinalServer, FinalServerEvent{WinnerID: winnerID}, time.Now().In(time.UTC).Add(newDuration).Unix())
+						game.broadcastServerEvent(FinalServer, FinalServerEvent{WinnerID: winnerID}, time.Now().In(time.UTC).Add(newDuration).Unix())
 					}
 				} else {
 					game.currentStep = ChooseQuestion
-					newDuration = 10 * time.Second
+					newDuration = 30 * time.Second
 				}
 
 				curQuest := game.Rounds[game.currentRound-1].Themes[game.currentTheme-1].Quests[game.currentQuestion-1]
@@ -403,8 +396,8 @@ func (game *Game) runGame(ctx context.Context) {
 					Score:   game.players[game.hub.clients[event.Token]].score,
 				}
 
-				game.sendServerEvent(AnswerAcceptedServer, nil, time.Now().In(time.UTC).Add(newDuration).Unix())
-				game.sendServerEvent(ScoreChangedServer, scoreChanged, 0)
+				game.broadcastServerEvent(AnswerAcceptedServer, nil, time.Now().In(time.UTC).Add(newDuration).Unix())
+				game.broadcastServerEvent(ScoreChangedServer, scoreChanged, 0)
 
 			case DeclineAnswer:
 				var found bool
@@ -420,7 +413,7 @@ func (game *Game) runGame(ctx context.Context) {
 						game.currentRound++
 						game.currentStep = ChooseQuestion
 
-						newDuration = 10 * time.Second
+						newDuration = 30 * time.Second
 					} else {
 						game.currentStep = Final
 						newDuration = 5 * time.Minute
@@ -434,8 +427,8 @@ func (game *Game) runGame(ctx context.Context) {
 							}
 						}
 
-						game.sendServerEvent(AnswerDeclinedServer, nil, time.Now().In(time.UTC).Add(newDuration).Unix())
-						game.sendServerEvent(FinalServer, FinalServerEvent{WinnerID: winnerID}, 0)
+						game.broadcastServerEvent(AnswerDeclinedServer, nil, time.Now().In(time.UTC).Add(newDuration).Unix())
+						game.broadcastServerEvent(FinalServer, FinalServerEvent{WinnerID: winnerID}, 0)
 					}
 				} else {
 					game.currentStep = ChooseQuestion
@@ -456,7 +449,7 @@ func (game *Game) runGame(ctx context.Context) {
 					Score:   game.players[game.hub.clients[event.Token]].score,
 				}
 
-				game.sendServerEvent(ScoreChangedServer, scoreChanged, time.Now().In(time.UTC).Add(newDuration).Unix())
+				game.broadcastServerEvent(ScoreChangedServer, scoreChanged, time.Now().In(time.UTC).Add(newDuration).Unix())
 			}
 
 			if newDuration != 0 {
@@ -468,11 +461,19 @@ func (game *Game) runGame(ctx context.Context) {
 
 			switch game.currentStep {
 			case WaitingStart:
+				singleton.DegTemporaryPack(game.UID)
+				if !singleton.IsExistemporaryPack(game.UID) {
+					err := os.Remove(game.configuration.PackTemporary.Path + "/" + string(game.UID[:]))
+					if err != nil {
+						// todo: logging
+					}
+				}
+
 				game.hub.close <- struct{}{}
 
 				break
 			case Grettings:
-				if len(game.Rounds) > game.currentRound-1 {
+				if len(game.Rounds) > game.currentRound {
 					game.currentStep = ReadingRound
 					game.currentRound++
 
@@ -481,19 +482,21 @@ func (game *Game) runGame(ctx context.Context) {
 					game.currentStep = Final
 
 					newDuration = 5 * time.Minute
+
+					game.broadcastServerEvent(FinalServer, FinalServerEvent{WinnerID: 1}, time.Now().In(time.UTC).Add(newDuration).Unix())
 				}
 
-				round := game.Rounds[game.currentRound]
+				round := game.Rounds[game.currentRound-1]
 
 				readingRound := ReadingRoundServerEvent{
 					Name: round.Name,
 				}
 
-				game.sendServerEvent(ReadingRoundServer, readingRound, time.Now().In(time.UTC).Add(newDuration).Unix())
+				game.broadcastServerEvent(ReadingRoundServer, readingRound, time.Now().In(time.UTC).Add(newDuration).Unix())
 			case ReadingRound:
 				game.currentStep = ReadingThemes
 
-				round := game.Rounds[game.currentRound]
+				round := game.Rounds[game.currentRound-1]
 
 				newDuration = time.Duration(len(round.Themes)) * 3 * time.Second
 
@@ -506,23 +509,23 @@ func (game *Game) runGame(ctx context.Context) {
 					ThemeNames: themeNames,
 				}
 
-				game.sendServerEvent(ReadingThemesServer, readingThemes, time.Now().In(time.UTC).Add(newDuration).Unix())
+				game.broadcastServerEvent(ReadingThemesServer, readingThemes, time.Now().In(time.UTC).Add(newDuration).Unix())
 			case ReadingThemes:
 				game.currentStep = ChooseQuestion
 
-				newDuration = 10 * time.Second
+				newDuration = 30 * time.Second
 
-				round := game.Rounds[game.currentRound]
+				round := game.Rounds[game.currentRound-1]
 
 				wall := WallServerEvent{
 					Themes: round.Themes,
 				}
 
-				game.sendServerEvent(WallServer, wall, time.Now().In(time.UTC).Add(newDuration).Unix())
+				game.broadcastServerEvent(WallServer, wall, time.Now().In(time.UTC).Add(newDuration).Unix())
 			case ChooseQuestion:
 				game.currentStep = Getting
 
-				round := game.Rounds[game.currentRound]
+				round := game.Rounds[game.currentRound-1]
 				var themeID int
 				var quest *Question
 				for _, theme := range round.Themes {
@@ -543,16 +546,53 @@ func (game *Game) runGame(ctx context.Context) {
 
 				newDuration = 10 * time.Second
 
-				game.sendServerEvent(GetQuestServer, getQuest, time.Now().In(time.UTC).Add(newDuration).Unix())
+				game.broadcastServerEvent(GetQuestServer, getQuest, time.Now().In(time.UTC).Add(newDuration).Unix())
 
 				// todo: send correct answer to leader
 			case Getting:
-				game.currentStep = ChooseQuestion
-				newDuration = 10 * time.Second
+				var found bool
+				for _, theme := range game.Rounds[game.currentRound-1].Themes {
+					for _, question := range theme.Quests {
+						if question.Price >= 0 && question.Id != game.currentQuestion {
+							found = true
+						}
+					}
+				}
+				if !found {
+					if len(game.Rounds) > game.currentRound-1 {
+						game.currentRound++
+						game.currentStep = ChooseQuestion
+
+						newDuration = 30 * time.Second
+					} else {
+						game.currentStep = Final
+						newDuration = 5 * time.Minute
+
+						var winnerID int
+						var maxScore int
+						for _, player := range game.players {
+							if player.score > maxScore {
+								maxScore = player.score
+								winnerID = game.playersQueueIDByToken[player.client.token]
+							}
+						}
+
+						game.broadcastServerEvent(FinalServer, FinalServerEvent{WinnerID: winnerID}, time.Now().In(time.UTC).Add(newDuration).Unix())
+					}
+				} else {
+					game.currentStep = ChooseQuestion
+					newDuration = 10 * time.Second
+				}
 
 				currentQuest := game.Rounds[game.currentRound-1].Themes[game.currentTheme-1].Quests[game.currentQuestion-1]
 
 				currentQuest.Price = -1
+
+				wall := WallServerEvent{
+					Themes: game.Rounds[game.currentRound-1].Themes,
+				}
+
+				game.broadcastServerEvent(WallServer, wall, time.Now().In(time.UTC).Add(newDuration).Unix())
 			case Answering:
 				var found bool
 				for _, theme := range game.Rounds[game.currentRound-1].Themes {
@@ -581,7 +621,7 @@ func (game *Game) runGame(ctx context.Context) {
 							}
 						}
 
-						game.sendServerEvent(FinalServer, FinalServerEvent{WinnerID: winnerID}, time.Now().In(time.UTC).Add(newDuration).Unix())
+						game.broadcastServerEvent(FinalServer, FinalServerEvent{WinnerID: winnerID}, time.Now().In(time.UTC).Add(newDuration).Unix())
 					}
 				} else {
 					game.currentStep = ChooseQuestion
@@ -602,8 +642,15 @@ func (game *Game) runGame(ctx context.Context) {
 					Score:   game.players[game.hub.clients[game.playersTokenByQueueID[game.currentPlayerID]]].score,
 				}
 
-				game.sendServerEvent(ScoreChangedServer, scoreChanged, time.Now().In(time.UTC).Add(newDuration).Unix())
+				game.broadcastServerEvent(ScoreChangedServer, scoreChanged, time.Now().In(time.UTC).Add(newDuration).Unix())
 			case Final:
+				singleton.DegTemporaryPack(game.UID)
+				if !singleton.IsExistemporaryPack(game.UID) {
+					err := os.Remove(game.configuration.PackTemporary.Path + "/" + string(game.UID[:]))
+					if err != nil {
+						// todo: logging
+					}
+				}
 				game.hub.close <- struct{}{}
 
 				break
@@ -617,7 +664,7 @@ func (game *Game) runGame(ctx context.Context) {
 	}
 }
 
-func (game *Game) sendServerEvent(eventType ServerEventType, event interface{}, exp int64) error {
+func (game *Game) broadcastServerEvent(eventType ServerEventType, event interface{}, exp int64) error {
 	serverEvent := ServerEvent{
 		Type: eventType,
 		Exp:  exp,

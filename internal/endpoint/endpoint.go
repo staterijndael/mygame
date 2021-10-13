@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -178,27 +179,25 @@ func (e *Endpoint) saveSiGamePack(w http.ResponseWriter, r *http.Request) {
 
 	hash := sha256.Sum256(buf.Bytes())
 
+	encodedHash := hex.EncodeToString(hash[:])
+
 	ok := singleton.IsExistPack(hash)
 	if !ok {
-		singleton.AddPack(hash, fileHeader.Filename)
+		singleton.AddPack(hash)
 
-		file, err := os.Create(e.configuration.Pack.Path + SiGameArchivesPath + "/" + fileHeader.Filename + ToArchiveType)
+		file, err := os.Create(e.configuration.Pack.Path + SiGameArchivesPath + "/" + encodedHash + ToArchiveType)
 		if err != nil {
 			responseWriterError(err, w, http.StatusInternalServerError, ctx, "save file error")
 
 			return
 		}
 
-		if _, err = io.Copy(file, buf); err != nil {
-			responseWriterError(err, w, http.StatusInternalServerError, ctx, "io copy error")
+		io.Copy(file, buf)
+	} else {
+		responseWriterError(errors.New("pack already exists"), w, http.StatusInternalServerError, ctx, "pack already exists")
 
-			return
-		}
+		return
 	}
-
-	responseWriter(http.StatusOK, map[string]interface{}{}, w, ctx)
-
-	return
 }
 
 func (e *Endpoint) authCredentials(w http.ResponseWriter, r *http.Request) {

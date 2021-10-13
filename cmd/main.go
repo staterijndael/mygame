@@ -15,14 +15,18 @@ import (
 	"net/http"
 	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 const defaultPacksPath = "./packs"
+const defaultPacksTemporaryPath = "./packs_temporary"
 
 var packsPath string
+var packsTemporaryPath string
 
 func init() {
 	flag.StringVar(&packsPath, "packs-path", defaultPacksPath, "packs path")
+	flag.StringVar(&packsTemporaryPath, "packs-temp-path", defaultPacksTemporaryPath, "packs temporary path")
 	flag.StringVar(&packsPath, "p", defaultPacksPath, "packs path")
 }
 
@@ -35,6 +39,12 @@ func main() {
 	}
 
 	config.Pack.Path = packsPath
+	config.PackTemporary.Path = packsTemporaryPath
+
+	err = initHashes(config.Pack.Path)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	//connectionAddr := &database.Connection{
 	//	Host:     config.DB.Host,
@@ -93,4 +103,28 @@ func parseCfg(path string) (*config.Config, error) {
 	}
 
 	return &config, nil
+}
+
+func initHashes(packsDir string) error {
+	files, err := ioutil.ReadDir(packsDir + "/siq_archives")
+	if err != nil {
+		return err
+	}
+
+	for _, f := range files {
+		if strings.Contains(f.Name(), ".zip") {
+			arr := strings.Split(f.Name(), ".zip")
+			if len(arr) != 2 {
+				continue
+			}
+
+			var packHash [32]byte
+
+			copy(packHash[:], arr[0])
+
+			singleton.AddPack(packHash)
+		}
+	}
+
+	return nil
 }
