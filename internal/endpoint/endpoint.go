@@ -28,13 +28,21 @@ const (
 
 	MaxPackSize = MB * 150
 
-	SiGame = "si_game_pack"
-	MyGame = "my_game_pack"
-
 	SiGameArchivesPath = "/siq_archives"
 
 	ToArchiveType = ".zip"
 )
+
+type GameType string
+
+const (
+	SiGame GameType = "si_game_pack"
+	MyGame GameType = "my_game_pack"
+)
+
+func (g GameType) ToString() string {
+	return string(g)
+}
 
 type EndpointType string
 
@@ -46,6 +54,7 @@ const (
 	GetLoginEndpoint        EndpointType = "/get/login/"
 	RegisterEndpoint        EndpointType = "/register"
 	PackUploadEndpoint      EndpointType = "/pack/upload"
+	GetPacksEndpoint        EndpointType = "/get/packs"
 )
 
 func (e EndpointType) ToString() string {
@@ -59,6 +68,7 @@ const (
 const (
 	RequestTokenContext = "REQUEST_TOKEN"
 	LoggerContext       = "LOGGER"
+	EndpointContext     = "ENDPOINT"
 )
 
 type Endpoint struct {
@@ -85,6 +95,7 @@ func (e *Endpoint) InitRoutes() {
 	http.HandleFunc(RegisterEndpoint.ToString(), e.createUser)
 	http.HandleFunc(HubEndpoint.ToString(), e.serveWs)
 	http.HandleFunc(PackUploadEndpoint.ToString(), e.saveSiGamePack)
+	http.HandleFunc(GetPacksEndpoint.ToString(), e.getPacks)
 }
 
 func (e *Endpoint) CreateContext(r *http.Request) context.Context {
@@ -99,9 +110,15 @@ func (e *Endpoint) CreateContext(r *http.Request) context.Context {
 
 	ctx := context.WithValue(r.Context(), RequestTokenContext, requestToken)
 	ctx = context.WithValue(r.Context(), LoggerContext, logger)
+	ctx = context.WithValue(r.Context(), EndpointContext, endpointName)
 
-	executionTime, err := e.pushMetrics(true, endpointName, func() error {
-		return errors.New("monitoring push metrics failed")
+	err := e.monitoring.IncGauge(&monitoring.Metric{
+		Namespace: "http",
+		Name:      "request_per_second",
+		ConstLabels: map[string]string{
+			"endpoint_name": endpointName,
+			"is_server":     fmt.Sprintf("%t", true),
+		},
 	})
 	if err != nil {
 		logger.Error(
@@ -109,11 +126,6 @@ func (e *Endpoint) CreateContext(r *http.Request) context.Context {
 			zap.Error(err),
 		)
 	}
-
-	logger.Debug(
-		"monitoring execution time",
-		zap.Float64("execution_time", executionTime),
-	)
 
 	return ctx
 }
@@ -140,38 +152,133 @@ func (e *Endpoint) pushMetrics(isServer bool, endpointName string, f func() erro
 	return
 }
 
-func (e *Endpoint) saveSiGamePack(w http.ResponseWriter, r *http.Request) {
+func (e *Endpoint) getPacks(w http.ResponseWriter, r *http.Request) {
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
 
-	multipartFile, fileHeader, err := r.FormFile(SiGame)
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "get data from form file error")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "read body error")
+
+		return
+	}
+
+	type request struct {
+		Limit  int
+		Offset int
+	}
+
+	var req *request
+
+	err = json.Unmarshal(body, &req)
+	if err != nil {
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "unmarshal body to struct error")
+
+		return
+	}
+
+	packs := singleton.GetPacks()
+
+	type pack struct {
+		Name string
+		Hash [32]byte
+	}
+
+	packsResponse := make([]*pack, 0, len(packs))
+
+	for hash, name := range packs {
+		packsResponse = append(packsResponse, &pack{
+			Name: name,
+			Hash: hash,
+		})
+	}
+
+	if req.Offset != 0 || req.Limit != 0 {
+		if len(packsResponse) <= req.Offset {
+			e.responseWriter(http.StatusOK, map[string]interface{}{}, w, ctx)
+
+			return
+		}
+
+		if req.Offset+req.Limit > len(packsResponse) {
+			req.Limit = len(packsResponse)
+		}
+
+		packsResponse = packsResponse[req.Offset : req.Offset+req.Limit]
+	}
+
+	e.responseWriter(http.StatusOK, map[string]interface{}{
+		"packs": packsResponse,
+	}, w, ctx)
+}
+
+func (e *Endpoint) getPackInfo(w http.ResponseWriter, r *http.Request) {
+	ctx := e.CreateContext(r)
+
+	if r.Method != http.MethodPost {
+		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+
+		return
+	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "read body error")
+
+		return
+	}
+
+	type request struct {
+		Hash [32]byte
+	}
+
+	var req *request
+
+	err = json.Unmarshal(body, &req)
+	if err != nil {
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "unmarshal body to struct error")
+
+		return
+	}
+}
+
+func (e *Endpoint) saveSiGamePack(w http.ResponseWriter, r *http.Request) {
+	ctx := e.CreateContext(r)
+
+	if r.Method != http.MethodPost {
+		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+
+		return
+	}
+
+	multipartFile, fileHeader, err := r.FormFile(SiGame.ToString())
+	if err != nil {
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "get data from form file error")
 
 		return
 	}
 
 	_, err = jwt.ParseJWT([]byte(e.configuration.JWT.SecretKey), r.Header.Get("Authorization"))
 	if err != nil {
-		responseWriterError(err, w, http.StatusUnauthorized, ctx, "parse jwt error")
+		e.responseWriterError(err, w, http.StatusUnauthorized, ctx, "parse jwt error")
 
 		return
 	}
 
 	if fileHeader.Size > MaxPackSize {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "file size > 150 MB")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "file size > 150 MB")
 
 		return
 	}
 
 	buf := bytes.NewBuffer(nil)
 	if _, err = io.Copy(buf, multipartFile); err != nil {
-		responseWriterError(err, w, http.StatusInternalServerError, ctx, "io copy error")
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "io copy error")
 
 		return
 	}
@@ -184,19 +291,19 @@ func (e *Endpoint) saveSiGamePack(w http.ResponseWriter, r *http.Request) {
 
 		file, err := os.Create(e.configuration.Pack.Path + SiGameArchivesPath + "/" + fileHeader.Filename + ToArchiveType)
 		if err != nil {
-			responseWriterError(err, w, http.StatusInternalServerError, ctx, "save file error")
+			e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "save file error")
 
 			return
 		}
 
 		if _, err = io.Copy(file, buf); err != nil {
-			responseWriterError(err, w, http.StatusInternalServerError, ctx, "io copy error")
+			e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "io copy error")
 
 			return
 		}
 	}
 
-	responseWriter(http.StatusOK, map[string]interface{}{}, w, ctx)
+	e.responseWriter(http.StatusOK, map[string]interface{}{}, w, ctx)
 
 	return
 }
@@ -205,7 +312,7 @@ func (e *Endpoint) authCredentials(w http.ResponseWriter, r *http.Request) {
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
@@ -214,56 +321,56 @@ func (e *Endpoint) authCredentials(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "read body error")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "read body error")
 
 		return
 	}
 
 	err = json.Unmarshal(body, &credentials)
 	if err != nil {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "unmarshal body to struct error")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "unmarshal body to struct error")
 
 		return
 	}
 
 	err = credentials.Validate()
 	if err != nil {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "validate credentials error")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "validate credentials error")
 
 		return
 	}
 
-	if !e.repository.UserRepository.IsExistByLogin(r.Context(), credentials.Login) {
-		responseWriterError(err, w, http.StatusUnauthorized, ctx, "user does not exist")
+	if !e.repository.UserRepository.IsExistByLogin(ctx, credentials.Login) {
+		e.responseWriterError(err, w, http.StatusUnauthorized, ctx, "user does not exist")
 
 		return
 	}
 
 	hashPassword, err := helpers.NewMD5Hash(credentials.Password)
 	if err != nil {
-		responseWriterError(err, w, http.StatusInternalServerError, ctx, "hash password error")
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "hash password error")
 
 		return
 	}
 
 	credentials.Password = hashPassword
 
-	id, err := e.repository.UserRepository.GetUserByCredentials(r.Context(), credentials)
+	id, err := e.repository.UserRepository.GetUserByCredentials(ctx, credentials)
 	if err != nil {
-		responseWriterError(err, w, http.StatusUnauthorized, ctx, "hash password error")
+		e.responseWriterError(err, w, http.StatusUnauthorized, ctx, "hash password error")
 
 		return
 	}
 
-	token, err := jwt.GenerateTokens(r.Context(), id, credentials.Login, e.configuration.JWT.SecretKey,
+	token, err := jwt.GenerateTokens(ctx, id, credentials.Login, e.configuration.JWT.SecretKey,
 		e.configuration.JWT.ExpirationTime)
 	if err != nil {
-		responseWriterError(err, w, http.StatusInternalServerError, ctx, "generate token error")
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "generate token error")
 
 		return
 	}
 
-	responseWriter(http.StatusOK, map[string]interface{}{
+	e.responseWriter(http.StatusOK, map[string]interface{}{
 		"access_token": token,
 	}, w, ctx)
 
@@ -274,7 +381,7 @@ func (e *Endpoint) authAccessToken(w http.ResponseWriter, r *http.Request) {
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
@@ -287,32 +394,32 @@ func (e *Endpoint) authAccessToken(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "read body error")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "read body error")
 
 		return
 	}
 
 	err = json.Unmarshal(body, &req)
 	if err != nil {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "unmarshal body to struct error")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "unmarshal body to struct error")
 
 		return
 	}
 
 	token, err := jwt.ParseJWT([]byte(e.configuration.JWT.SecretKey), req.AccessToken)
 	if err != nil {
-		responseWriterError(err, w, http.StatusInternalServerError, ctx, "parse jwt error")
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "parse jwt error")
 
 		return
 	}
 
 	if token.ExpiresAt < time.Now().Unix() {
-		responseWriterError(errors.New("token has expired").(error), w, http.StatusUnauthorized, ctx, "")
+		e.responseWriterError(errors.New("token has expired").(error), w, http.StatusUnauthorized, ctx, "")
 
 		return
 	}
 
-	responseWriter(http.StatusOK, map[string]interface{}{}, w, ctx)
+	e.responseWriter(http.StatusOK, map[string]interface{}{}, w, ctx)
 
 	return
 }
@@ -321,7 +428,7 @@ func (e *Endpoint) authGuest(w http.ResponseWriter, r *http.Request) {
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
@@ -334,26 +441,26 @@ func (e *Endpoint) authGuest(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "read body error")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "read body error")
 
 		return
 	}
 
 	err = json.Unmarshal(body, &req)
 	if err != nil {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "unmarshal body to struct error")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "unmarshal body to struct error")
 
 		return
 	}
 
-	token, err := jwt.GenerateTokens(r.Context(), 0, req.Login, e.configuration.JWT.SecretKey, e.configuration.JWT.ExpirationTime)
+	token, err := jwt.GenerateTokens(ctx, 0, req.Login, e.configuration.JWT.SecretKey, e.configuration.JWT.ExpirationTime)
 	if err != nil {
-		responseWriterError(err, w, http.StatusInternalServerError, ctx, "generate token error")
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "generate token error")
 
 		return
 	}
 
-	responseWriter(http.StatusOK, map[string]interface{}{
+	e.responseWriter(http.StatusOK, map[string]interface{}{
 		"access_token": token,
 	}, w, ctx)
 
@@ -364,7 +471,7 @@ func (e *Endpoint) getLoginFromAccessToken(w http.ResponseWriter, r *http.Reques
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
@@ -377,32 +484,32 @@ func (e *Endpoint) getLoginFromAccessToken(w http.ResponseWriter, r *http.Reques
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "read body error")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "read body error")
 
 		return
 	}
 
 	err = json.Unmarshal(body, &req)
 	if err != nil {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "unmarshal body to struct error")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "unmarshal body to struct error")
 
 		return
 	}
 
 	token, err := jwt.ParseJWT([]byte(e.configuration.JWT.SecretKey), req.AccessToken)
 	if err != nil {
-		responseWriterError(err, w, http.StatusUnauthorized, ctx, "parse jwt error")
+		e.responseWriterError(err, w, http.StatusUnauthorized, ctx, "parse jwt error")
 
 		return
 	}
 
 	if token.ExpiresAt < time.Now().Unix() {
-		responseWriterError(errors.New("token has expired").(error), w, http.StatusUnauthorized, ctx, "")
+		e.responseWriterError(errors.New("token has expired").(error), w, http.StatusUnauthorized, ctx, "")
 
 		return
 	}
 
-	responseWriter(http.StatusOK, map[string]interface{}{
+	e.responseWriter(http.StatusOK, map[string]interface{}{
 		"login": token.Login,
 	}, w, ctx)
 
@@ -413,7 +520,7 @@ func (e *Endpoint) createUser(w http.ResponseWriter, r *http.Request) {
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
@@ -422,48 +529,48 @@ func (e *Endpoint) createUser(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "read body error")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "read body error")
 
 		return
 	}
 
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "unmarshal body to struct error")
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "unmarshal body to struct error")
 
 		return
 	}
 
-	if e.repository.UserRepository.IsExistByLogin(r.Context(), user.Login) {
-		responseWriterError(err, w, http.StatusBadRequest, ctx, "user does not exist")
+	if e.repository.UserRepository.IsExistByLogin(ctx, user.Login) {
+		e.responseWriterError(err, w, http.StatusBadRequest, ctx, "user does not exist")
 
 		return
 	}
 
 	hashPassword, err := helpers.NewMD5Hash(user.Password)
 	if err != nil {
-		responseWriterError(err, w, http.StatusInternalServerError, ctx, "hash password error")
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "hash password error")
 
 		return
 	}
 
 	user.Password = hashPassword
 
-	id, err := e.repository.UserRepository.CreateUser(r.Context(), user)
+	id, err := e.repository.UserRepository.CreateUser(ctx, user)
 	if err != nil {
-		responseWriterError(err, w, http.StatusInternalServerError, ctx, "create user error")
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "create user error")
 
 		return
 	}
 
-	token, err := jwt.GenerateTokens(r.Context(), id, user.Login, e.configuration.JWT.SecretKey, e.configuration.JWT.ExpirationTime)
+	token, err := jwt.GenerateTokens(ctx, id, user.Login, e.configuration.JWT.SecretKey, e.configuration.JWT.ExpirationTime)
 	if err != nil {
-		responseWriterError(err, w, http.StatusInternalServerError, ctx, "parse jwt error")
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "parse jwt error")
 
 		return
 	}
 
-	responseWriter(http.StatusOK, map[string]interface{}{
+	e.responseWriter(http.StatusOK, map[string]interface{}{
 		"access_token": token,
 	}, w, ctx)
 

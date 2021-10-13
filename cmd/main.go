@@ -61,6 +61,8 @@ func main() {
 
 	singleton.InitSingleton()
 
+	singleton.InitPacks(defaultPacksPath + "/" + "siq_archives")
+
 	monitoring := monitoring.NewPrometheusMonitoring(config.Monitoring)
 
 	endpoint := endpoint.NewEndpoint(nil, config, logger, monitoring)

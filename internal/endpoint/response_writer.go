@@ -3,31 +3,46 @@ package endpoint
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"go.uber.org/zap"
+	"mygame/dependers/monitoring"
 	"net/http"
 )
 
-func responseWriter(statusCode int, data interface{}, w http.ResponseWriter, ctx context.Context) {
+func (e *Endpoint) responseWriter(statusCode int, data interface{}, w http.ResponseWriter, ctx context.Context) {
+	logger := ctx.Value("LOGGER").(*zap.Logger)
+
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(statusCode)
 
 	json, err := json.Marshal(data)
 	if err != nil {
-		responseWriterError(err, w, http.StatusInternalServerError, ctx, "sent response error")
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "sent response error")
 
 		return
 	}
 
 	_, err = w.Write(json)
 	if err != nil {
-		responseWriterError(err, w, http.StatusInternalServerError, ctx, "sent response error")
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "sent response error")
 
 		return
 	}
+
+	logger.Debug("Response [OUT]")
+
+	e.monitoring.DecGauge(&monitoring.Metric{
+		Namespace: "http",
+		Name:      "request_per_second",
+		ConstLabels: map[string]string{
+			"endpoint_name": ctx.Value(EndpointContext).(string),
+			"is_server":     fmt.Sprintf("%t", true),
+		},
+	})
 }
 
-func responseWriterError(err error, w http.ResponseWriter, statusCode int, ctx context.Context, message string) {
+func (e *Endpoint) responseWriterError(err error, w http.ResponseWriter, statusCode int, ctx context.Context, message string) {
 	logger := ctx.Value("LOGGER").(*zap.Logger)
 
 	logger.Error(
@@ -35,7 +50,7 @@ func responseWriterError(err error, w http.ResponseWriter, statusCode int, ctx c
 		zap.Error(err),
 	)
 
-	responseWriter(statusCode, map[string]interface{}{
+	e.responseWriter(statusCode, map[string]interface{}{
 		"error": err.Error(),
 	}, w, ctx)
 
