@@ -40,21 +40,21 @@ func main() {
 	config.Pack.Path = packsPath
 	config.PackTemporary.Path = packsTemporaryPath
 
-	//connectionAddr := &database.Connection{
-	//	Host:     config.DB.Host,
-	//	Port:     config.DB.Port,
-	//	User:     config.DB.User,
-	//	Password: config.DB.Password,
-	//	DBName:   config.DB.DBName,
-	//	SSLMode:  config.DB.SSLMode,
-	//}
-	//
-	//connectionAddrStr := database.GenerateAddr(connectionAddr)
+	connectionAddr := &database.Connection{
+		Host:     config.DB.Host,
+		Port:     config.DB.Port,
+		User:     config.DB.User,
+		Password: config.DB.Password,
+		DBName:   config.DB.DBName,
+		SSLMode:  config.DB.SSLMode,
+	}
+	
+	connectionAddrStr := database.GenerateAddr(connectionAddr)
 
-	//db, err := database.NewDB(connectionAddrStr)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
+	db, err := database.NewDB(connectionAddrStr)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	logger, err := logger.ConfigureLogger(config.App.LogLevel)
 	if err != nil {
