@@ -71,7 +71,7 @@ func main() {
 
 	monitoring := monitoring.NewPrometheusMonitoring(config.Monitoring)
 
-	endpoint := endpoint.NewEndpoint(nil, config, logger, monitoring)
+	endpoint := endpoint.NewEndpoint(db, config, logger, monitoring)
 	endpoint.InitRoutes()
 
 	logger.Info(
