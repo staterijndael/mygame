@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"mygame/config"
+	"mygame/dependers/database"
 	"mygame/dependers/logger"
 	"mygame/dependers/monitoring"
 	"mygame/internal/endpoint"
