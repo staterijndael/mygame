@@ -3,11 +3,11 @@ app:
   log_level: "debug"
 
 db:
-  host:     "0.0.0.0"
+  host:     "193.108.113.9"
   port:     "5432"
-  user:     "user"
-  password: "password"
-  db_name:  "db"
+  user:     "postgres"
+  password: "mygame1f9d1111"
+  db_name:  "my_game"
   ssl_mode: "disable"
 
 jwt:

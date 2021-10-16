@@ -49,7 +49,7 @@ func main() {
 		DBName:   config.DB.DBName,
 		SSLMode:  config.DB.SSLMode,
 	}
-	
+  
 	connectionAddrStr := database.GenerateAddr(connectionAddr)
 
 	db, err := database.NewDB(connectionAddrStr)

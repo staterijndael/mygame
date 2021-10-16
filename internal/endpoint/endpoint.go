@@ -11,7 +11,6 @@ import (
 	"go.uber.org/zap"
 	"io"
 	"io/ioutil"
-	"log"
 	"mygame/config"
 	"mygame/dependers/monitoring"
 	"mygame/internal/models"
@@ -279,7 +278,17 @@ func (e *Endpoint) getPackInfo(w http.ResponseWriter, r *http.Request) {
 
 	pack := parser.GetMyGame()
 
-	log.Println(pack)
+	for _, round := range pack.Rounds {
+		for _, theme := range round.Themes {
+			for _, quest := range theme.Quests {
+				quest.Answer = []*Object{}
+			}
+		}
+	}
+
+	e.responseWriter(http.StatusOK, map[string]interface{}{
+		"pack_info": pack,
+	}, w, ctx)
 }
 
 func (e *Endpoint) saveSiGamePack(w http.ResponseWriter, r *http.Request) {

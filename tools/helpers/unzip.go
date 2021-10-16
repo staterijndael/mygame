@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -39,6 +40,11 @@ func Unzip(src, dest string) error {
 
 		if !strings.HasPrefix(path, filepath.Clean(dest)+string(os.PathSeparator)) {
 			return fmt.Errorf("illegal file path: %s", path)
+		}
+
+		path, err = url.PathUnescape(path)
+		if err != nil {
+			return err
 		}
 
 		if f.FileInfo().IsDir() {
