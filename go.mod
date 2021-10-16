@@ -3,6 +3,7 @@ module mygame
 go 1.15
 
 require (
+	github.com/artdarek/go-unzip v1.0.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/gen2brain/go-unarr v0.1.1 // indirect

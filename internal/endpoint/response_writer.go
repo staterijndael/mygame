@@ -4,14 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"go.uber.org/zap"
 	"mygame/dependers/monitoring"
 	"net/http"
 )
 
 func (e *Endpoint) responseWriter(statusCode int, data interface{}, w http.ResponseWriter, ctx context.Context) {
-	logger := ctx.Value("LOGGER").(*zap.Logger)
-
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(statusCode)
@@ -30,8 +27,6 @@ func (e *Endpoint) responseWriter(statusCode int, data interface{}, w http.Respo
 		return
 	}
 
-	logger.Debug("Response [OUT]")
-
 	e.monitoring.DecGauge(&monitoring.Metric{
 		Namespace: "http",
 		Name:      "request_per_second",
@@ -43,13 +38,6 @@ func (e *Endpoint) responseWriter(statusCode int, data interface{}, w http.Respo
 }
 
 func (e *Endpoint) responseWriterError(err error, w http.ResponseWriter, statusCode int, ctx context.Context, message string) {
-	logger := ctx.Value("LOGGER").(*zap.Logger)
-
-	logger.Error(
-		message,
-		zap.Error(err),
-	)
-
 	e.responseWriter(statusCode, map[string]interface{}{
 		"error": err.Error(),
 	}, w, ctx)
