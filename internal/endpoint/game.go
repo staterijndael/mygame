@@ -135,12 +135,12 @@ type FinalServerEvent struct {
 }
 
 type Game struct {
-	UID [32]byte
+	UID [32]byte `json:"uid"`
 
-	Name   string
-	Author string
-	Date   string
-	Rounds []*Round
+	Name   string   `json:"name"`
+	Author string   `json:"author"`
+	Date   string   `json:"date"`
+	Rounds []*Round `json:"rounds"`
 
 	hub                   *Hub
 	players               map[*Client]*Player
@@ -165,38 +165,45 @@ type Player struct {
 }
 
 type Round struct {
-	Id     int
-	Name   string
-	Themes []*Theme
+	Id     int      `json:"id"`
+	Name   string   `json:"name"`
+	Themes []*Theme `json:"themes"`
 }
 
 type Theme struct {
-	Id     int
-	Name   string
-	Quests []*Question
+	Id     int         `json:"id"`
+	Name   string      `json:"name"`
+	Quests []*Question `json:"quests"`
 }
 
 type ObjectType string
 
 const (
-	Text   ObjectType = "text"
-	Image  ObjectType = "image"
-	Audio  ObjectType = "voice"
-	Video  ObjectType = "video"
-	Answer ObjectType = "answer"
+	Text       ObjectType = "text"
+	Image      ObjectType = "image"
+	Audio      ObjectType = "voice"
+	Video      ObjectType = "video"
+	Auction    ObjectType = "auction"
+	Answer     ObjectType = "answer"
+	FinalRound ObjectType = "final"
+	Marker     ObjectType = "marker"
 )
 
+func (o ObjectType) String() string {
+	return string(o)
+}
+
 type Question struct {
-	Id     int
-	Price  int
-	Scene  []*Object
-	Answer []*Object
+	Id     int       `json:"id"`
+	Price  int       `json:"price"`
+	Scene  []*Object `json:"scenes"`
+	Answer []*Object `json:"answers"`
 }
 
 type Object struct {
-	Id   int
-	Type ObjectType
-	Src  string
+	Id   int        `json:"id"`
+	Type ObjectType `json:"question_type"`
+	Src  string     `json:"src"`
 }
 
 func (game *Game) runGame(ctx context.Context) {

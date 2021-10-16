@@ -21,6 +21,7 @@ const (
 
 type Parser struct {
 	IParser
+	hash      [32]byte
 	packsPath string
 	myGame    *Game
 	siGame    *models.Package
@@ -87,6 +88,13 @@ func (p *Parser) InitMyGame() error {
 				var scene []*Object
 
 				for z, atom := range question.Scenario.Atom {
+					if atom.Type == "" {
+						atom.Type = Text.String()
+					} else if atom.Type == Video.String() || atom.Type == Image.String() ||
+						atom.Type == Audio.String() {
+						atom.Text = strings.ReplaceAll(atom.Text, "@", "")
+					}
+
 					scene = append(scene, &Object{
 						Id:   z + 1,
 						Src:  atom.Text,
