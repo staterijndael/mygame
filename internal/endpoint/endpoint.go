@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 	"io"
 	"io/ioutil"
+	"log"
 	"mygame/config"
 	"mygame/dependers/monitoring"
 	"mygame/internal/models"
@@ -55,6 +56,7 @@ const (
 	RegisterEndpoint        EndpointType = "/register"
 	PackUploadEndpoint      EndpointType = "/pack/upload"
 	GetPacksEndpoint        EndpointType = "/get/packs"
+	GetPackInfoEndpoint     EndpointType = "/get/pack/info"
 )
 
 func (e EndpointType) ToString() string {
@@ -96,6 +98,7 @@ func (e *Endpoint) InitRoutes() {
 	http.HandleFunc(HubEndpoint.ToString(), e.serveWs)
 	http.HandleFunc(PackUploadEndpoint.ToString(), e.saveSiGamePack)
 	http.HandleFunc(GetPacksEndpoint.ToString(), e.getPacks)
+	http.HandleFunc(GetPackInfoEndpoint.ToString(), e.getPackInfo)
 }
 
 func (e *Endpoint) CreateContext(r *http.Request) context.Context {
@@ -108,7 +111,7 @@ func (e *Endpoint) CreateContext(r *http.Request) context.Context {
 		zap.String("request_token", requestToken),
 	)
 
-	ctx := context.WithValue(r.Context(), RequestTokenContext, requestToken)
+	var ctx = context.WithValue(r.Context(), RequestTokenContext, requestToken)
 	ctx = context.WithValue(r.Context(), LoggerContext, logger)
 	ctx = context.WithValue(r.Context(), EndpointContext, endpointName)
 
@@ -156,7 +159,7 @@ func (e *Endpoint) getPacks(w http.ResponseWriter, r *http.Request) {
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
@@ -169,8 +172,8 @@ func (e *Endpoint) getPacks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type request struct {
-		Limit  int
-		Offset int
+		Limit  int `json:"limit"`
+		Offset int `json:"offset"`
 	}
 
 	var req *request
@@ -185,8 +188,8 @@ func (e *Endpoint) getPacks(w http.ResponseWriter, r *http.Request) {
 	packs := singleton.GetPacks()
 
 	type pack struct {
-		Name string
-		Hash [32]byte
+		Name string   `json:"name"`
+		Hash [32]byte `json:"hash"`
 	}
 
 	packsResponse := make([]*pack, 0, len(packs))
@@ -200,7 +203,9 @@ func (e *Endpoint) getPacks(w http.ResponseWriter, r *http.Request) {
 
 	if req.Offset != 0 || req.Limit != 0 {
 		if len(packsResponse) <= req.Offset {
-			e.responseWriter(http.StatusOK, map[string]interface{}{}, w, ctx)
+			e.responseWriter(http.StatusOK, map[string]interface{}{
+				"packs": "",
+			}, w, ctx)
 
 			return
 		}
@@ -221,7 +226,7 @@ func (e *Endpoint) getPackInfo(w http.ResponseWriter, r *http.Request) {
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
@@ -234,7 +239,7 @@ func (e *Endpoint) getPackInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type request struct {
-		Hash [32]byte
+		Hash [32]byte `json:"hash"`
 	}
 
 	var req *request
@@ -245,13 +250,43 @@ func (e *Endpoint) getPackInfo(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
+
+	packName := singleton.GetPack(req.Hash)
+
+	err = helpers.Unzip(e.configuration.Pack.Path+SiGameArchivesPath+"/"+packName,
+		e.configuration.PackTemporary.Path+"/"+packName)
+	if err != nil {
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "Unzip pack error")
+
+		return
+	}
+
+	parser := NewParser(e.configuration.PackTemporary.Path)
+
+	err = parser.ParsingSiGamePack(packName)
+	if err != nil {
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "parsing si game pack error")
+
+		return
+	}
+
+	err = parser.InitMyGame()
+	if err != nil {
+		e.responseWriterError(err, w, http.StatusInternalServerError, ctx, "init my game error")
+
+		return
+	}
+
+	pack := parser.GetMyGame()
+
+	log.Println(pack)
 }
 
 func (e *Endpoint) saveSiGamePack(w http.ResponseWriter, r *http.Request) {
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
@@ -312,7 +347,7 @@ func (e *Endpoint) authCredentials(w http.ResponseWriter, r *http.Request) {
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
@@ -381,7 +416,7 @@ func (e *Endpoint) authAccessToken(w http.ResponseWriter, r *http.Request) {
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
@@ -414,7 +449,7 @@ func (e *Endpoint) authAccessToken(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if token.ExpiresAt < time.Now().Unix() {
-		e.responseWriterError(errors.New("token has expired").(error), w, http.StatusUnauthorized, ctx, "")
+		e.responseWriterError(errors.New("token has expired"), w, http.StatusUnauthorized, ctx, "")
 
 		return
 	}
@@ -428,7 +463,7 @@ func (e *Endpoint) authGuest(w http.ResponseWriter, r *http.Request) {
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
@@ -471,7 +506,7 @@ func (e *Endpoint) getLoginFromAccessToken(w http.ResponseWriter, r *http.Reques
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
@@ -504,7 +539,7 @@ func (e *Endpoint) getLoginFromAccessToken(w http.ResponseWriter, r *http.Reques
 	}
 
 	if token.ExpiresAt < time.Now().Unix() {
-		e.responseWriterError(errors.New("token has expired").(error), w, http.StatusUnauthorized, ctx, "")
+		e.responseWriterError(errors.New("token has expired"), w, http.StatusUnauthorized, ctx, "")
 
 		return
 	}
@@ -520,7 +555,7 @@ func (e *Endpoint) createUser(w http.ResponseWriter, r *http.Request) {
 	ctx := e.CreateContext(r)
 
 	if r.Method != http.MethodPost {
-		e.responseWriterError(errors.New("method not allowed").(error), w, http.StatusMethodNotAllowed, ctx, "")
+		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
 
 		return
 	}
