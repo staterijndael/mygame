@@ -9,7 +9,7 @@ import (
 )
 
 func (e *Endpoint) responseWriter(statusCode int, data interface{}, w http.ResponseWriter, ctx context.Context) {
-	setupResponse(&w)
+	e.setCors(w)
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -39,16 +39,19 @@ func (e *Endpoint) responseWriter(statusCode int, data interface{}, w http.Respo
 	})
 }
 
+func (e *Endpoint) setCors(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers",
+		"Accept, Content-Type, Content-Length, Accept-Encoding, Authorization")
+	w.Header().Set("Referrer-Policy", "no-referrer-when-downgrade")
+	w.Header().Set("Referrer", "no-referrer-when-downgrade")
+}
+
 func (e *Endpoint) responseWriterError(err error, w http.ResponseWriter, statusCode int, ctx context.Context, message string) {
 	e.responseWriter(statusCode, map[string]interface{}{
 		"error": err.Error(),
 	}, w, ctx)
 
 	return
-}
-
-func setupResponse(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
