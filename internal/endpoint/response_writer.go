@@ -43,7 +43,8 @@ func (e *Endpoint) setCors(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers",
-		"Accept, Content-Type, Content-Length, Accept-Encoding, Authorization, Access-Control-Allow-Origin")
+		"Accept, Content-Type, Content-Length, Accept-Encoding, Authorization, "+
+			"Access-Control-Allow-Origin, Referer-Policy")
 }
 
 func (e *Endpoint) responseWriterError(err error, w http.ResponseWriter, statusCode int, ctx context.Context, message string) {
