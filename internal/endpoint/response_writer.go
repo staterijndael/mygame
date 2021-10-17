@@ -44,9 +44,6 @@ func (e *Endpoint) setCors(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers",
 		"Accept, Content-Type, Content-Length, Accept-Encoding, Authorization")
-	w.Header().Set("Referer", "no-referrer-when-downgrade")
-	w.Header().Set("Referrer-Policy", "no-referrer-when-downgrade")
-
 }
 
 func (e *Endpoint) responseWriterError(err error, w http.ResponseWriter, statusCode int, ctx context.Context, message string) {
