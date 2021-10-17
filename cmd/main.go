@@ -14,6 +14,7 @@ import (
 	"mygame/internal/singleton"
 	"mygame/tools/helpers"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
 )
@@ -31,6 +32,8 @@ func init() {
 }
 
 func main() {
+	secretKey := os.Getenv("SECRET_KEY")
+
 	flag.Parse()
 
 	config, err := parseCfg("./config/config.yaml")
@@ -40,6 +43,7 @@ func main() {
 
 	config.Pack.Path = packsPath
 	config.PackTemporary.Path = packsTemporaryPath
+	config.JWT.SecretKey = secretKey
 
 	connectionAddr := &database.Connection{
 		Host:     config.DB.Host,
