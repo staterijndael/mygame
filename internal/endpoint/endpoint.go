@@ -213,7 +213,7 @@ func (e *Endpoint) getPacks(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if req.Offset+req.Limit > len(packsResponse) {
+		if req.Offset+req.Limit-1 > len(packsResponse) {
 			req.Limit = len(packsResponse)
 		}
 
@@ -284,9 +284,7 @@ func (e *Endpoint) getPackInfo(w http.ResponseWriter, r *http.Request) {
 
 	for _, round := range pack.Rounds {
 		for _, theme := range round.Themes {
-			for _, quest := range theme.Quests {
-				quest.Answer = []*Object{}
-			}
+			theme.Quests = []*Question{}
 		}
 	}
 
