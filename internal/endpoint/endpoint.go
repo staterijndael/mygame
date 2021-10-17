@@ -100,7 +100,7 @@ func (e *Endpoint) InitRoutes() {
 	http.HandleFunc(GetPackInfoEndpoint.ToString(), e.getPackInfo)
 }
 
-func (e *Endpoint) CreateContext(r *http.Request) context.Context {
+func (e *Endpoint) CreateContext(w http.ResponseWriter, r *http.Request) context.Context {
 	requestToken := r.Header.Get(RequestTokenHeader)
 
 	endpointName := EndpointType(r.URL.RequestURI()).ToString()
@@ -113,6 +113,10 @@ func (e *Endpoint) CreateContext(r *http.Request) context.Context {
 	var ctx = context.WithValue(r.Context(), RequestTokenContext, requestToken)
 	ctx = context.WithValue(r.Context(), LoggerContext, logger)
 	ctx = context.WithValue(r.Context(), EndpointContext, endpointName)
+
+	if r.Method == "OPTIONS" {
+		e.responseWriter(http.StatusOK, map[string]interface{}{}, w, ctx)
+	}
 
 	err := e.monitoring.IncGauge(&monitoring.Metric{
 		Namespace: "http",
@@ -155,7 +159,7 @@ func (e *Endpoint) pushMetrics(isServer bool, endpointName string, f func() erro
 }
 
 func (e *Endpoint) getPacks(w http.ResponseWriter, r *http.Request) {
-	ctx := e.CreateContext(r)
+	ctx := e.CreateContext(w, r)
 
 	if r.Method != http.MethodPost {
 		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
@@ -222,7 +226,7 @@ func (e *Endpoint) getPacks(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *Endpoint) getPackInfo(w http.ResponseWriter, r *http.Request) {
-	ctx := e.CreateContext(r)
+	ctx := e.CreateContext(w, r)
 
 	if r.Method != http.MethodPost {
 		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
@@ -292,7 +296,7 @@ func (e *Endpoint) getPackInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *Endpoint) saveSiGamePack(w http.ResponseWriter, r *http.Request) {
-	ctx := e.CreateContext(r)
+	ctx := e.CreateContext(w, r)
 
 	if r.Method != http.MethodPost {
 		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
@@ -353,7 +357,7 @@ func (e *Endpoint) saveSiGamePack(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *Endpoint) authCredentials(w http.ResponseWriter, r *http.Request) {
-	ctx := e.CreateContext(r)
+	ctx := e.CreateContext(w, r)
 
 	if r.Method != http.MethodPost {
 		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
@@ -422,7 +426,7 @@ func (e *Endpoint) authCredentials(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *Endpoint) authAccessToken(w http.ResponseWriter, r *http.Request) {
-	ctx := e.CreateContext(r)
+	ctx := e.CreateContext(w, r)
 
 	if r.Method != http.MethodPost {
 		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
@@ -469,7 +473,7 @@ func (e *Endpoint) authAccessToken(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *Endpoint) authGuest(w http.ResponseWriter, r *http.Request) {
-	ctx := e.CreateContext(r)
+	ctx := e.CreateContext(w, r)
 
 	if r.Method != http.MethodPost {
 		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
@@ -512,7 +516,7 @@ func (e *Endpoint) authGuest(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *Endpoint) getLoginFromAccessToken(w http.ResponseWriter, r *http.Request) {
-	ctx := e.CreateContext(r)
+	ctx := e.CreateContext(w, r)
 
 	if r.Method != http.MethodPost {
 		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
@@ -561,7 +565,7 @@ func (e *Endpoint) getLoginFromAccessToken(w http.ResponseWriter, r *http.Reques
 }
 
 func (e *Endpoint) createUser(w http.ResponseWriter, r *http.Request) {
-	ctx := e.CreateContext(r)
+	ctx := e.CreateContext(w, r)
 
 	if r.Method != http.MethodPost {
 		e.responseWriterError(errors.New("method not allowed"), w, http.StatusMethodNotAllowed, ctx, "")
