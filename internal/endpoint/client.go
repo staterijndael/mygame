@@ -155,7 +155,7 @@ func (c *Client) writePump() {
 // serveWs handles websocket requests from the peer.
 func (e *Endpoint) serveWs(w http.ResponseWriter, r *http.Request) {
 	//example how to use logger
-	ctx := e.CreateContext(r)
+	ctx := e.CreateContext(w, r)
 
 	// example how to get user request token
 	//requestToken := ctx.Value(RequestTokenContext).(string)
