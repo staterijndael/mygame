@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"github.com/gorilla/handlers"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -84,11 +83,7 @@ func main() {
 		zap.String("database_host", config.DB.Host+":"+config.DB.Port),
 	)
 
-	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
-	methods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"})
-	origins := handlers.AllowedOrigins([]string{"*"})
-
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(config.App.Port), handlers.CORS(headers, methods, origins)(nil)))
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(config.App.Port), nil))
 }
 
 func parseCfg(path string) (*config.Config, error) {
