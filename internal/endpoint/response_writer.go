@@ -9,8 +9,6 @@ import (
 )
 
 func (e *Endpoint) responseWriter(statusCode int, data interface{}, w http.ResponseWriter, ctx context.Context) {
-	e.setCors(w)
-
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(statusCode)
@@ -37,13 +35,6 @@ func (e *Endpoint) responseWriter(statusCode int, data interface{}, w http.Respo
 			"is_server":     fmt.Sprintf("%t", true),
 		},
 	})
-}
-
-func (e *Endpoint) setCors(w http.ResponseWriter) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers",
-		"Accept, Content-Type, Content-Length, Accept-Encoding, Authorization")
 }
 
 func (e *Endpoint) responseWriterError(err error, w http.ResponseWriter, statusCode int, ctx context.Context, message string) {
